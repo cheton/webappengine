@@ -15,9 +15,7 @@
     "node": "0.10.x"
   },
   "keywords": [
-    "arduino",
-    "raspberry-pi",
-    "socket-io"
+    "webappengine"
   ],
   "bin": {
     "webappengine": "./bin/webappengine"
