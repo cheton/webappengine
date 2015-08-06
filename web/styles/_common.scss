@@ -1,0 +1,11 @@
+//
+// Bourbon - A simple and lightweight mixin library for Sass.
+//
+@import "bourbon";
+@import "common.spacing";
+
+@mixin image-size($size) {
+    width: $size;
+    height: $size;
+    line-height: $size;
+}

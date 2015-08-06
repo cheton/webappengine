@@ -1,0 +1,13 @@
+@import "common";
+
+img.center,
+i.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.vcenter {
+    display: table-cell;
+    vertical-align: middle;
+}

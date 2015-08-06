@@ -1,0 +1,147 @@
+// ==========================================================================
+// Helper classes
+// ==========================================================================
+
+/*
+ * Hide visually and from screen readers: h5bp.com/u
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screen readers: h5bp.com/v
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+img.center,
+i.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+// Centering in the Unknown (http://css-tricks.com/centering-in-the-unknown/)
+
+// Centering - Table (for Internet Explorer 7 and 8)
+@mixin vertical-centering-table() {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+
+    &.left {
+        text-align: left;
+    }
+    &.right {
+        text-align: right;
+    }
+
+    // The element to be centered, can also be of any width and height
+    > * {
+        display: inline-block;
+        text-align: left;
+    }
+}
+
+// Centering - Block (for Internet Explorer 9 and later versions)
+@mixin vertical-centering-block() {
+    // This parent can be any width and height
+    text-align: center;
+
+    &.left {
+        text-align: left;
+    }
+    &.right {
+        text-align: right;
+    }
+
+    // The ghost, nudged to maintain perfect centering
+    &::before {
+        content: ''; // ghost element
+        display: inline-block;
+        vertical-align: middle;
+        width: 0;
+        height: 100%;
+    }
+
+    // The element to be centered, can also be of any width and height
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: left;
+    }
+}
+
+.vertical-centering {
+    @include vertical-centering-block();
+}
+.lt-ie9 .vertical-centering {
+    @include vertical-centering-table();
+}
+.vertical-centering-table {
+    @include vertical-centering-table();
+}
+.vertical-centering-block {
+    @include vertical-centering-block();
+}

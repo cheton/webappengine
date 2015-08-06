@@ -1,0 +1,24 @@
+{
+    "sEmptyTable": "Nessun dato disponibile nella tabella",
+    "sInfo": "Record: _START_ - _END_ / _TOTAL_",
+    "sInfoEmpty": "Record: 0",
+    "sInfoFiltered": "(filtrati da _MAX_ voci totali)",
+    "sInfoPostFix": "",
+    "sInfoThousands": " ",
+    "sLengthMenu": "_MENU_ per pagina",
+    "sLoadingRecords": "Caricamento in corso...",
+    "sProcessing": "Elaborazione in corso...",
+    "sSearch": "Cerca:",
+    "sZeroRecords": "Nessun record corrispondente trovato",
+    "oPaginate": {
+        "sPage": "Pagina _PAGE_ / _TOTALPAGES_",
+        "sFirst": "Primo",
+        "sLast": "Ultimo",
+        "sNext": "Successivo",
+        "sPrevious": "Precedente"
+    },
+    "oAria": {
+        "sSortAscending": ": attivare per ordinare la colonna in modo crescente",
+        "sSortDescending": ": attivare per ordinare la colonna in modo discendente"
+    }
+}

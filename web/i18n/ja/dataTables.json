@@ -1,0 +1,24 @@
+{
+    "sEmptyTable": "表示するデータがありません",
+    "sInfo": "レコード: _START_ - _END_/_TOTAL_",
+    "sInfoEmpty": "レコード: 0",
+    "sInfoFiltered": "(総数_MAX_からフィルタ済み)",
+    "sInfoPostFix": "",
+    "sInfoThousands": ",",
+    "sLengthMenu": "_MENU_ /ページ",
+    "sLoadingRecords": "ロード中...",
+    "sProcessing": "処理しています...",
+    "sSearch": "検索:",
+    "sZeroRecords": "一致するレコードが見つかりません",
+    "oPaginate": {
+        "sPage": "_PAGE_/_TOTALPAGES_ページ",
+        "sFirst": "先頭へ",
+        "sLast": "末尾へ",
+        "sNext": "次へ",
+        "sPrevious": "戻る"
+    },
+    "oAria": {
+        "sSortAscending": ": 列を昇順に並び替え",
+        "sSortDescending": ": 列を降順に並び替え"
+    }
+}

@@ -1,0 +1,18 @@
+@import "common";
+
+/* Override Commercial Bootstrap with custom styles */
+@import "bootstrap-grid-nospace";
+
+
+// bootstrap.css
+a {
+    color: #0088dd;
+    text-decoration: none;
+}
+
+// Prevent Twitter bootstrap empty <dd> filling with next <dd> value
+// http://stackoverflow.com/questions/10566451/prevent-twitter-bootstrap-empty-dd-filling-with-next-dd-value 
+// https://github.com/twbs/bootstrap/pull/3821#issuecomment-6561752
+.dl-horizontal > dd {
+    @include clearfix;
+}

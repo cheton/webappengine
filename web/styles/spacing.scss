@@ -1,0 +1,82 @@
+@import "common";
+
+.spacing-clear {
+    padding: 0;
+    margin: 0;
+}
+
+@for $i from 1 through length($spacing-sizes) {
+    $size: nth($spacing-sizes, $i);
+    // Padding
+    .spacing-pad-#{$size} {
+        padding: spacing(#{$size});
+    }
+    .spacing-pad-top-#{$size} {
+        padding-top: spacing(#{$size});
+    }
+    .spacing-pad-right-#{$size} {
+        padding-right: spacing(#{$size});
+    }
+    .spacing-pad-bottom-#{$size} {
+        padding-bottom: spacing(#{$size});
+    }
+    .spacing-pad-left-#{$size} {
+        padding-left: spacing(#{$size});
+    }
+    .spacing-pad-vert-#{$size} {
+        padding-top: spacing(#{$size});
+        padding-bottom: spacing(#{$size});
+    }
+    .spacing-pad-horz-#{$size} {
+        padding-right: spacing(#{$size});
+        padding-left: spacing(#{$size});
+    }
+    // Margin Classes
+    .spacing-inset-#{$size} {
+        margin: spacing(#{$size});
+    }
+    .spacing-inset-top-#{$size} {
+        margin-top: spacing(#{$size});
+    }
+    .spacing-inset-right-#{$size} {
+        margin-right: spacing(#{$size});
+    }
+    .spacing-inset-bottom-#{$size} {
+        margin-bottom: spacing(#{$size});
+    }
+    .spacing-inset-left-#{$size} {
+        margin-left: spacing(#{$size});
+    }
+    .spacing-inset-vert-#{$size} {
+        margin-top: spacing(#{$size});
+        margin-bottom: spacing(#{$size});
+    }
+    .spacing-inset-horz-#{$size} {
+        margin-right: spacing(#{$size});
+        margin-left: spacing(#{$size});
+    }
+    // Negative Margin Classes
+    .spacing-outset-#{$size} {
+        margin: -1 * spacing(#{$size});
+    }
+    .spacing-outset-top-#{$size} {
+        margin-top: -1 * spacing(#{$size});
+    }
+    .spacing-outset-right-#{$size} {
+        margin-right: -1 * spacing(#{$size});
+    }
+    .spacing-outset-bottom-#{$size} {
+        margin-bottom: -1 * spacing(#{$size});
+    }
+    .spacing-outset-left-#{$size} {
+        margin-left: -1 * spacing(#{$size});
+    }
+    .spacing-outset-vert-#{$size} {
+        margin-top: -1 * spacing(#{$size});
+        margin-bottom: -1 * spacing(#{$size});
+    }
+    .spacing-outset-horz-#{$size} {
+        margin-right: -1 * spacing(#{$size});
+        margin-left: -1 * spacing(#{$size});
+    }
+}
