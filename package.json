@@ -106,6 +106,7 @@
     "require-dir": "^0.1.0",
     "run-sequence": "^1.0.2",
     "supertest": "0.15.x",
+    "text-table": "^0.2.0",
     "through2": "^0.6.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-fs": "^1.0.0",
