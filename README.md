@@ -10,14 +10,14 @@ $ npm install -g webappengine
 ```
 
 ## Usage
-Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works. For Example:
+Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works:
 
 ```bash
 $ webappengine
 ```
 To check what port the app is running on, find the message `Server is listening on 0.0.0.0:8000` from console output.
 
-By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on:
+By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on. For example:
 ```bash
 $ PORT=80 webappengine
 ```
