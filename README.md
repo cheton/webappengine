@@ -6,17 +6,18 @@ A web application platform that can host multiple web apps running with Node.js.
 
 ## Installation
 ```bash
-npm install -g webappengine
+$ npm install -g webappengine
 ```
 
-## Getting Started
-Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works. To check what port the app is running on, find the message below from console output:
+## Usage
+Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works. For Example:
 
+```bash
+$ webappengine
 ```
-Server is listening on 0.0.0.0:8000
-```
+To check what port the app is running on, find the message `Server is listening on 0.0.0.0:8000` from console output.
 
-By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on. For example:
+By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on:
 ```bash
 $ PORT=80 webappengine
 ```
