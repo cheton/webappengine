@@ -24,7 +24,7 @@
   },
   "main": "./index.js",
   "scripts": {
-    "test": "npm run gulp && npm run tap-test",
+    "test": "npm run gulp",
     "gulp": "gulp",
     "tap-test": "tap test/*.js"
   },
