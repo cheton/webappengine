@@ -2363,11 +2363,7 @@ var Home = React.createClass({
                         null,
                         i18n._('If you see this page, the WebAppEngine server is successfully installed and working. Further configuration is required.')
                     ),
-                    React.createElement(
-                        'p',
-                        null,
-                        i18n._('For online documentation please refer to <a href="http://cheton.github.io/webappengine/">http://cheton.github.io/webappengine/</a>.')
-                    ),
+                    React.createElement('p', { dangerouslySetInnerHTML: { __html: i18n._('For online documentation please refer to <a href="http://cheton.github.io/webappengine/">http://cheton.github.io/webappengine/</a>.') } }),
                     React.createElement(
                         'p',
                         null,
