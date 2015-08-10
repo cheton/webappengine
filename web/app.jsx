@@ -25,13 +25,17 @@ var App = React.createClass({
     }
 });
 
-var routes = (
-    <Route name="app" path="/" handler={App}>
-        <DefaultRoute handler={Home}/>
-        <Route name="dashboard" handler={Dashboard}/>
-    </Route>
-);
-
-Router.run(routes, function(Handler) {
-    React.render(<Handler/>, document.querySelector('#components'));
-});
+module.exports = {
+    App: App,
+    run: function() {
+        var routes = (
+            <Route name="app" path="/" handler={App}>
+                <DefaultRoute handler={Home}/>
+                <Route name="dashboard" handler={Dashboard}/>
+            </Route>
+        );
+        Router.run(routes, function(Handler) {
+            React.render(<Handler/>, document.querySelector('#components'));
+        });
+    }
+};
