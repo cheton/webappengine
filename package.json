@@ -111,8 +111,11 @@
     "yargs": "^2.3.0"
   },
   "browser": {
+    "async": "./web/vendor/async/lib/async.js",
     "bootstrap": "./web/vendor/bootstrap/dist/js/bootstrap.js",
+    "i18next": "./web/vendor/i18next/i18next.js",
     "jquery": "./web/vendor/jquery/dist/jquery.js",
+    "jsUri": "./web/vendor/jsUri/Uri.js",
     "handlebars": "./web/vendor/handlebars/handlebars.runtime.js",
     "modernizr": "./web/vendor/modernizr/modernizr.js",
     "react": "./web/vendor/react/react.js",
