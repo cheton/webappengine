@@ -24,7 +24,6 @@ var Header = React.createClass({
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button">{i18n._('Settings')} <span className="caret"></span></a>
                                 <ul className="dropdown-menu" role="menu">
-                                    <li role="separator" className="divider"></li>
                                     <li className="dropdown-header">{i18n._('Language')}</li>
                                     <li><a href="?lang=de">Deutsch</a></li>
                                     <li><a href="?lang=en">English (US)</a></li>
