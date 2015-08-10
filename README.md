@@ -27,6 +27,22 @@ Set the environment variable `NODE_ENV` to `production` if you are running in pr
 $ NODE_ENV=production webappengine
 ```
 
+### Change the display language
+You can change the display language by specifying the `lang` query string parameter: `?lang={locale}`
+
+Here is a list of currently supported locales:
+
+Locale | Language
+------ | --------
+de     | Deutsch
+en     | English (US)
+es     | Español
+fr     | Français
+it     | Italiano
+ja     | 日本語
+zh-cn  | 中文 (简体)
+zh-tw  | 中文 (繁體)
+
 ## License
 
 Copyright (c) 2015 Cheton Wu
