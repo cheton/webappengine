@@ -166,7 +166,7 @@ module.exports = {
         }
     },
     stylus: {
-        src: ['web/**/*.{styl}'],
+        src: ['web/**/*.styl'],
         dest: 'web/',
         options: {
             compress: true
