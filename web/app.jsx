@@ -7,30 +7,21 @@ var Route = Router.Route,
     RouteHandler = Router.RouteHandler;
 
 var Header = require('./components/header').Header;
+var Home = require('./components/home').Home;
+var Dashboard = require('./components/dashboard').Dashboard;
 
 var App = React.createClass({
     render: function () {
-        var divStyle = {
-            marginTop: '70px'
+        var style = {
+            paddingTop: '50px',
+            paddingBottom: '20px'
         };
         return (
-            <div style={divStyle}>
+            <div style={style}>
                 <Header/>
                 <RouteHandler/>
             </div>
         );
-    }
-});
-
-var Home = React.createClass({
-    render: function() {
-        return <h1>Home</h1>;
-    }
-});
-
-var Dashboard = React.createClass({
-    render: function() {
-        return <h1>Dashboard</h1>;
     }
 });
 

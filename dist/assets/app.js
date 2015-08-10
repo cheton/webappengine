@@ -26,43 +26,22 @@ var Route = Router.Route,
     RouteHandler = Router.RouteHandler;
 
 var Header = require('./components/header').Header;
+var Home = require('./components/home').Home;
+var Dashboard = require('./components/dashboard').Dashboard;
 
 var App = React.createClass({
     displayName: 'App',
 
     render: function render() {
-        var divStyle = {
-            marginTop: '70px'
+        var style = {
+            paddingTop: '50px',
+            paddingBottom: '20px'
         };
         return React.createElement(
             'div',
-            { style: divStyle },
+            { style: style },
             React.createElement(Header, null),
             React.createElement(RouteHandler, null)
-        );
-    }
-});
-
-var Home = React.createClass({
-    displayName: 'Home',
-
-    render: function render() {
-        return React.createElement(
-            'h1',
-            null,
-            'Home'
-        );
-    }
-});
-
-var Dashboard = React.createClass({
-    displayName: 'Dashboard',
-
-    render: function render() {
-        return React.createElement(
-            'h1',
-            null,
-            'Dashboard'
         );
     }
 });
@@ -79,7 +58,33 @@ Router.run(routes, function (Handler) {
 });
 
 
-},{"./components/header":"/home/cheton/github/webappengine/web/components/header/index.jsx","./lib/log":"/home/cheton/github/webappengine/web/lib/log.js","react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/header/index.jsx":[function(require,module,exports){
+},{"./components/dashboard":"/home/cheton/github/webappengine/web/components/dashboard/index.jsx","./components/header":"/home/cheton/github/webappengine/web/components/header/index.jsx","./components/home":"/home/cheton/github/webappengine/web/components/home/index.jsx","./lib/log":"/home/cheton/github/webappengine/web/lib/log.js","react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/dashboard/index.jsx":[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+
+var Dashboard = React.createClass({
+    displayName: "Dashboard",
+
+    render: function render() {
+        return React.createElement(
+            "div",
+            { className: "container" },
+            React.createElement(
+                "h1",
+                null,
+                "Dashboard"
+            )
+        );
+    }
+});
+
+module.exports = {
+    Dashboard: Dashboard
+};
+
+
+},{"react":"react"}],"/home/cheton/github/webappengine/web/components/header/index.jsx":[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -92,45 +97,41 @@ var Header = React.createClass({
 
     render: function render() {
         return React.createElement(
-            'div',
-            null,
+            'nav',
+            { className: 'navbar navbar-inverse navbar-fixed-top' },
             React.createElement(
-                'nav',
-                { className: 'navbar navbar-default navbar-fixed-top' },
+                'div',
+                { className: 'container' },
                 React.createElement(
                     'div',
-                    { className: 'container' },
+                    { className: 'navbar-header' },
                     React.createElement(
-                        'div',
-                        { className: 'navbar-header' },
-                        React.createElement(
-                            'button',
-                            { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar-collapse' },
-                            React.createElement('span', { className: 'sr-only' }),
-                            React.createElement('span', { className: 'icon-bar' }),
-                            React.createElement('span', { className: 'icon-bar' }),
-                            React.createElement('span', { className: 'icon-bar' })
-                        ),
-                        React.createElement(
-                            'a',
-                            { className: 'navbar-brand', href: '#' },
-                            'WebAppEngine'
-                        )
+                        'button',
+                        { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar-collapse' },
+                        React.createElement('span', { className: 'sr-only' }),
+                        React.createElement('span', { className: 'icon-bar' }),
+                        React.createElement('span', { className: 'icon-bar' }),
+                        React.createElement('span', { className: 'icon-bar' })
                     ),
                     React.createElement(
-                        'div',
-                        { className: 'navbar-collapse collapse', id: 'navbar-collapse' },
+                        'a',
+                        { className: 'navbar-brand', href: '#' },
+                        'WebAppEngine'
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'navbar-collapse collapse', id: 'navbar-collapse' },
+                    React.createElement(
+                        'ul',
+                        { className: 'nav navbar-nav' },
                         React.createElement(
-                            'ul',
-                            { className: 'nav navbar-nav' },
+                            'li',
+                            null,
                             React.createElement(
-                                'li',
-                                { className: 'active' },
-                                React.createElement(
-                                    Link,
-                                    { to: 'dashboard' },
-                                    'Dashboard'
-                                )
+                                Link,
+                                { to: 'dashboard' },
+                                'Dashboard'
                             )
                         )
                     )
@@ -145,7 +146,76 @@ module.exports = {
 };
 
 
-},{"react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/lib/browser.js":[function(require,module,exports){
+},{"react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/home/index.jsx":[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+
+var Home = React.createClass({
+    displayName: "Home",
+
+    render: function render() {
+        return React.createElement(
+            "div",
+            null,
+            React.createElement(
+                "div",
+                { className: "jumbotron" },
+                React.createElement(
+                    "div",
+                    { className: "container" },
+                    React.createElement(
+                        "h1",
+                        null,
+                        "Welcome to WebAppEngine!"
+                    ),
+                    React.createElement(
+                        "p",
+                        null,
+                        "If you see this page, the WebAppEngine server is successfully installed and working. Further configuration is required."
+                    ),
+                    React.createElement(
+                        "p",
+                        null,
+                        "For online documentation please refer to ",
+                        React.createElement(
+                            "a",
+                            { href: "http://cheton.github.io/webappengine/" },
+                            "http://cheton.github.io/webappengine/"
+                        ),
+                        "."
+                    ),
+                    React.createElement(
+                        "p",
+                        null,
+                        React.createElement(
+                            "a",
+                            { className: "btn btn-primary btn-lg", href: "https://github.com/cheton/webappengine", role: "button" },
+                            "Learn more »"
+                        )
+                    ),
+                    React.createElement(
+                        "p",
+                        null,
+                        React.createElement(
+                            "i",
+                            null,
+                            "Thank you for using WebAppEngine."
+                        )
+                    )
+                )
+            ),
+            React.createElement("div", { className: "container" })
+        );
+    }
+});
+
+module.exports = {
+    Home: Home
+};
+
+
+},{"react":"react"}],"/home/cheton/github/webappengine/web/lib/browser.js":[function(require,module,exports){
 'use strict';
 
 var browser = {
