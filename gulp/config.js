@@ -195,7 +195,6 @@ module.exports = {
             ns: {
                 namespaces: [
                     'locale', // locale: language, timezone, ...
-                    'plural',
                     'resource' // default
                 ],
                 defaultNs: 'resource'
