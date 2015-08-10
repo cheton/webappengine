@@ -1,7 +1,9 @@
-// Module dependencies
-var cluster = require('cluster'),
+var _ = require('lodash'),
+    cluster = require('cluster'),
     winston = require('winston'),
-    util = require('util');
+    util = require('util'),
+    fs = require('fs'),
+    path = require('path');
 
 // String utils
 require('colors');
@@ -92,6 +94,16 @@ module.exports = function() {
 };
 
 module.exports.init = function(settings) {
+    _.each([ // return the directory name 
+        path.dirname(settings.transports.File.filename),
+        path.dirname(settings.exceptionHandlers.File.filename)
+    ], function(logDir) {
+        if ( ! fs.existsSync(logDir)) {
+            // Create the directory if it does not exist
+            fs.mkdirSync(logDir);
+        }
+    });
+
     if (cluster.isMaster) {
         settings.transports.File.filename = util.format(settings.transports.File.filename, '');
         settings.exceptionHandlers.File.filename = util.format(settings.exceptionHandlers.File.filename, '');
