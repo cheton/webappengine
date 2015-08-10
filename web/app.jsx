@@ -5,7 +5,6 @@ var Route = Router.Route,
     DefaultRoute = Router.DefaultRoute,
     Link = Router.Link,
     RouteHandler = Router.RouteHandler;
-
 var Header = require('./components/header').Header;
 var Home = require('./components/home').Home;
 var Dashboard = require('./components/dashboard').Dashboard;

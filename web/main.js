@@ -5,6 +5,7 @@ var Uri = require('jsUri');
 var log = require('./lib/log');
 var app = require('./app');
 var settings = require('./config/settings');
+var sha1 = require('sha1');
 
 var query_params = (function(qs) {
     qs = String(qs || '');
@@ -29,10 +30,32 @@ function cookie_get(key) {
     return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
 }
 
+function registerI18nHelpers(i18n) {
+    i18n = i18n || {};
+    i18n._ = function() {
+        var args = Array.prototype.slice.call(arguments);
+        if (_.size(args) === 0 || _.isEmpty(args[0])) {
+            i18n.t.apply(i18n, args);
+            return;
+        }
+
+        var value = args[0];
+        var options = args[1] || {};
+        var key = sha1(value);
+        args[0] = value;
+
+        options.defaultValue = value;
+
+        return i18n.t(key, options);
+    };
+}
+
 async.series([
     // i18next
     function i18next_init(next) {
         var lng;
+
+        registerI18nHelpers(i18n);
         
         // 1. query string: lang=en
         lng = query_params[settings.i18next.detectLngQS] || '';

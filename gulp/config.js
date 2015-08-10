@@ -177,6 +177,7 @@ module.exports = {
             'web/**/*.html',
             'web/**/*.hbs',
             'web/**/*.js',
+            'web/**/*.jsx',
             // Use ! to filter out files or directories
             '!web/{vendor,test,i18n}/**'
         ],
