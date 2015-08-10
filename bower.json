@@ -14,7 +14,10 @@
     "html5shiv": "~3.7.3",
     "react-router": "~0.13.3",
     "jquery": "1.11.x",
-    "rxjs": "~3.0.0"
+    "rxjs": "~3.0.0",
+    "async": "~1.4.2",
+    "jsUri": "~1.3.1",
+    "i18next": "~1.10.2"
   },
   "overrides": {
     "bootstrap": {
