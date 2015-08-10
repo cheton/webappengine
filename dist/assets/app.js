@@ -125,7 +125,7 @@ var Header = React.createClass({
                             { className: 'nav navbar-nav' },
                             React.createElement(
                                 'li',
-                                { className: 'active' },
+                                null,
                                 React.createElement(
                                     Link,
                                     { to: 'dashboard' },
