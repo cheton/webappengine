@@ -2243,12 +2243,12 @@ var Header = React.createClass({
                             React.createElement(
                                 'ul',
                                 { className: 'dropdown-menu', role: 'menu' },
-                                React.createElement('li', { role: 'separator', className: 'divider' }),
                                 React.createElement(
                                     'li',
                                     { className: 'dropdown-header' },
                                     i18n._('Language')
                                 ),
+                                React.createElement('li', { role: 'separator', className: 'divider' }),
                                 React.createElement(
                                     'li',
                                     null,
