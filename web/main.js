@@ -1,11 +1,91 @@
+var _ = require('lodash');
+var async = require('async');
+var i18n = require('i18next');
+var Uri = require('jsUri');
 var log = require('./lib/log');
+var app = require('./app');
+var settings = require('./config/settings');
 
-log.setLevel('debug');
-log.debug('webappengine started');
+var query_params = (function(qs) {
+    qs = String(qs || '');
+    if (qs[0] !== '?') {
+        qs = '?' + qs;
+    }
+    var uri = new Uri(qs);
+    var obj = _.reduce(uri.queryPairs, function(obj, item) {
+        var key = item[0], value = item[1];
+        obj[key] = decodeURIComponent(value);
+        return obj;
+    }, {});
 
-require('./app');
+    return obj;
+}(window.root.location.search)) || {};
 
-var loading = document.getElementById('loading');
-if (loading) {
-    loading.style.display = 'none';
+// https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie
+function cookie_get(key) {
+    if ( ! key) {
+        return null;
+    }
+    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
 }
+
+async.series([
+    // i18next
+    function i18next_init(next) {
+        var lng;
+        
+        // 1. query string: lang=en
+        lng = query_params[settings.i18next.detectLngQS] || '';
+
+        // 2. cookie
+        lng = lng || (function(lng) {
+            if (settings.i18next.useCookie) {
+                return cookie_get(settings.i18next.cookieName);
+            }
+            return lng;
+        }(lng));
+        
+        // 3. Using 'lang' attribute on the html element
+        lng = lng || $('html').attr('lang');
+
+        // Lowercase countryCode in requests
+        lng = (lng || '').toLowerCase();
+
+        if (settings.supportedLngs.indexOf(lng) >= 0) {
+            settings.i18next.lng = lng;
+        } else {
+            settings.i18next.lng = settings.i18next.fallbackLng || settings.supportedLngs[0];
+        }
+
+        i18n.init(settings.i18next, function(t) {
+            next();
+        });
+    },
+    // logger
+    function log_init(next) {
+        var log_level = query_params['log_level'] || settings.log.level;
+        var log_logger = query_params['log_logger'] || settings.log.logger;
+        var log_prefix = query_params['log_prefix'] || settings.log.prefix;
+
+        log.setLevel(log_level);
+        log.setLogger(log_logger);
+        log.setPrefix(log_prefix);
+
+        var msg = [
+            'version=' + settings.version,
+            'webroot=' + settings.webroot,
+            'cdn=' + settings.cdn
+        ];
+        log.debug(msg.join(','));
+
+        next();
+    }
+], function(err, results) {
+
+    var loading = document.getElementById('loading');
+    if (loading) {
+        loading.style.display = 'none';
+    }
+
+    app.run();
+});
