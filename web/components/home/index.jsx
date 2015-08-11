@@ -1,8 +1,8 @@
-var React = require('react');
-var i18n = require('i18next');
+import React from 'react';
+import i18n from 'i18next';
 
-var Home = React.createClass({
-    render: function() {
+class Home extends React.Component {
+    render() {
         return (
             <div>
                 <div className="jumbotron">
@@ -18,7 +18,7 @@ var Home = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = {
     Home: Home
