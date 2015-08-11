@@ -113,7 +113,59 @@ function log_init(next) {
 });
 
 
-},{"./app":"/home/cheton/github/webappengine/web/app.jsx","./config/settings":"/home/cheton/github/webappengine/web/config/settings.js","./lib/log":"/home/cheton/github/webappengine/web/lib/log.js","async":"/home/cheton/github/webappengine/web/vendor/async/lib/async.js","i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","jsUri":"/home/cheton/github/webappengine/web/vendor/jsUri/Uri.js","lodash":"lodash","sha1":"/home/cheton/github/webappengine/node_modules/sha1/sha1.js"}],"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/index.js":[function(require,module,exports){
+},{"./app":"/home/cheton/github/webappengine/web/app.jsx","./config/settings":"/home/cheton/github/webappengine/web/config/settings.js","./lib/log":"/home/cheton/github/webappengine/web/lib/log.js","async":"/home/cheton/github/webappengine/web/vendor/async/lib/async.js","i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","jsUri":"/home/cheton/github/webappengine/web/vendor/jsUri/Uri.js","lodash":"lodash","sha1":"/home/cheton/github/webappengine/node_modules/sha1/sha1.js"}],"/home/cheton/github/webappengine/node_modules/browserify-css/browser.js":[function(require,module,exports){
+'use strict';
+// For more information about browser field, check out the browser field at https://github.com/substack/browserify-handbook#browser-field.
+
+module.exports = {
+    // Create a <link> tag with optional data attributes
+    createLink: function(href, attributes) {
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+
+        link.href = href;
+        link.rel = 'stylesheet';
+
+        for (var key in attributes) {
+            if ( ! attributes.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = attributes[key];
+            link.setAttribute('data-' + key, value);
+        }
+
+        head.appendChild(link);
+    },
+    // Create a <style> tag with optional data attributes
+    createStyle: function(cssText, attributes) {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style');
+
+        style.type = 'text/css';
+
+        for (var key in attributes) {
+            if ( ! attributes.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = attributes[key];
+            style.setAttribute('data-' + key, value);
+        }
+        
+        if (style.sheet) { // for jsdom and IE9+
+            style.innerHTML = cssText;
+            style.sheet.cssText = cssText;
+            head.appendChild(style);
+        } else if (style.styleSheet) { // for IE8 and below
+            head.appendChild(style);
+            style.styleSheet.cssText = cssText;
+        } else { // for Chrome, Firefox, and Safari
+            style.appendChild(document.createTextNode(cssText));
+            head.appendChild(style);
+        }
+    }
+};
+
+},{}],"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/index.js":[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -2155,179 +2207,348 @@ module.exports = {
 },{"./components/dashboard":"/home/cheton/github/webappengine/web/components/dashboard/index.jsx","./components/header":"/home/cheton/github/webappengine/web/components/header/index.jsx","./components/home":"/home/cheton/github/webappengine/web/components/home/index.jsx","./lib/log":"/home/cheton/github/webappengine/web/lib/log.js","react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/dashboard/index.jsx":[function(require,module,exports){
 'use strict';
 
-var React = require('react');
-var i18n = require('i18next');
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var Dashboard = React.createClass({
-    displayName: 'Dashboard',
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-    render: function render() {
-        return React.createElement(
-            'div',
-            { className: 'container' },
-            React.createElement(
-                'h1',
-                null,
-                i18n._('Dashboard')
-            )
-        );
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _i18next = require('i18next');
+
+var _i18next2 = _interopRequireDefault(_i18next);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _widget = require('../widget');
+
+var Widget1 = (function (_Widget) {
+    _inherits(Widget1, _Widget);
+
+    function Widget1() {
+        _classCallCheck(this, Widget1);
+
+        _get(Object.getPrototypeOf(Widget1.prototype), 'constructor', this).apply(this, arguments);
     }
-});
+
+    _createClass(Widget1, [{
+        key: 'render',
+        value: function render() {
+            var options = {
+                title: 'WIDGET 1',
+                content: _react2['default'].createElement(
+                    'div',
+                    null,
+                    _react2['default'].createElement(
+                        'p',
+                        null,
+                        'Widget Content'
+                    )
+                )
+            };
+            return _react2['default'].createElement(_widget.Widget, { options: options });
+        }
+    }]);
+
+    return Widget1;
+})(_widget.Widget);
+
+var Widget2 = (function (_Widget2) {
+    _inherits(Widget2, _Widget2);
+
+    function Widget2() {
+        _classCallCheck(this, Widget2);
+
+        _get(Object.getPrototypeOf(Widget2.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(Widget2, [{
+        key: 'render',
+        value: function render() {
+            var options = {
+                title: 'WIDGET 2',
+                content: _react2['default'].createElement(
+                    'div',
+                    null,
+                    _react2['default'].createElement(
+                        'p',
+                        null,
+                        'Widget Content'
+                    )
+                )
+            };
+            return _react2['default'].createElement(_widget.Widget, { options: options });
+        }
+    }]);
+
+    return Widget2;
+})(_widget.Widget);
+
+var Widget3 = (function (_Widget3) {
+    _inherits(Widget3, _Widget3);
+
+    function Widget3() {
+        _classCallCheck(this, Widget3);
+
+        _get(Object.getPrototypeOf(Widget3.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(Widget3, [{
+        key: 'render',
+        value: function render() {
+            var options = {
+                noheader: true,
+                content: _react2['default'].createElement(
+                    'div',
+                    null,
+                    _react2['default'].createElement(
+                        'h3',
+                        { className: 'widget-title' },
+                        'WIDGET WITHOUT HEADER'
+                    ),
+                    _react2['default'].createElement(
+                        'p',
+                        null,
+                        'Widget Content'
+                    )
+                )
+            };
+            return _react2['default'].createElement(_widget.Widget, { options: options });
+        }
+    }]);
+
+    return Widget3;
+})(_widget.Widget);
+
+var Dashboard = (function (_React$Component) {
+    _inherits(Dashboard, _React$Component);
+
+    function Dashboard() {
+        _classCallCheck(this, Dashboard);
+
+        _get(Object.getPrototypeOf(Dashboard.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(Dashboard, [{
+        key: 'render',
+        value: function render() {
+            return _react2['default'].createElement(
+                'div',
+                { className: 'container no-heading' },
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'row' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'col-sm-6' },
+                        _react2['default'].createElement(Widget1, null)
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'col-sm-6' },
+                        _react2['default'].createElement(Widget2, null)
+                    )
+                ),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'row' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'col-sm-12' },
+                        _react2['default'].createElement(Widget3, null)
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Dashboard;
+})(_react2['default'].Component);
 
 module.exports = {
     Dashboard: Dashboard
 };
 
 
-},{"i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/header/index.jsx":[function(require,module,exports){
+},{"../widget":"/home/cheton/github/webappengine/web/components/widget/index.jsx","i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/header/index.jsx":[function(require,module,exports){
 'use strict';
 
-var React = require('react');
-var Router = require('react-router');
-var Route = Router.Route;
-var Link = Router.Link;
-var i18n = require('i18next');
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var Header = React.createClass({
-    displayName: 'Header',
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-    render: function render() {
-        return React.createElement(
-            'nav',
-            { className: 'navbar navbar-inverse navbar-fixed-top' },
-            React.createElement(
-                'div',
-                { className: 'container' },
-                React.createElement(
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _i18next = require('i18next');
+
+var _i18next2 = _interopRequireDefault(_i18next);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+var Header = (function (_React$Component) {
+    _inherits(Header, _React$Component);
+
+    function Header() {
+        _classCallCheck(this, Header);
+
+        _get(Object.getPrototypeOf(Header.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(Header, [{
+        key: 'render',
+        value: function render() {
+            return _react2['default'].createElement(
+                'nav',
+                { className: 'navbar navbar-inverse navbar-fixed-top' },
+                _react2['default'].createElement(
                     'div',
-                    { className: 'navbar-header' },
-                    React.createElement(
-                        'button',
-                        { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar-collapse' },
-                        React.createElement('span', { className: 'sr-only' }),
-                        React.createElement('span', { className: 'icon-bar' }),
-                        React.createElement('span', { className: 'icon-bar' }),
-                        React.createElement('span', { className: 'icon-bar' })
-                    ),
-                    React.createElement(
-                        'a',
-                        { className: 'navbar-brand', href: '#' },
-                        i18n._('WebAppEngine')
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'navbar-collapse collapse', id: 'navbar-collapse' },
-                    React.createElement(
-                        'ul',
-                        { className: 'nav navbar-nav' },
-                        React.createElement(
-                            'li',
-                            null,
-                            React.createElement(
-                                Link,
-                                { to: 'dashboard' },
-                                i18n._('Dashboard')
-                            )
+                    { className: 'container' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'navbar-header' },
+                        _react2['default'].createElement(
+                            'button',
+                            { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#navbar-collapse' },
+                            _react2['default'].createElement('span', { className: 'sr-only' }),
+                            _react2['default'].createElement('span', { className: 'icon-bar' }),
+                            _react2['default'].createElement('span', { className: 'icon-bar' }),
+                            _react2['default'].createElement('span', { className: 'icon-bar' })
                         ),
-                        React.createElement(
-                            'li',
-                            { className: 'dropdown' },
-                            React.createElement(
-                                'a',
-                                { href: '#', className: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button' },
-                                i18n._('Settings'),
-                                ' ',
-                                React.createElement('span', { className: 'caret' })
+                        _react2['default'].createElement(
+                            'a',
+                            { className: 'navbar-brand', href: '#' },
+                            _i18next2['default']._('WebAppEngine')
+                        )
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'navbar-collapse collapse', id: 'navbar-collapse' },
+                        _react2['default'].createElement(
+                            'ul',
+                            { className: 'nav navbar-nav' },
+                            _react2['default'].createElement(
+                                'li',
+                                null,
+                                _react2['default'].createElement(
+                                    _reactRouter.Link,
+                                    { to: 'dashboard' },
+                                    _i18next2['default']._('Dashboard')
+                                )
                             ),
-                            React.createElement(
-                                'ul',
-                                { className: 'dropdown-menu', role: 'menu' },
-                                React.createElement(
-                                    'li',
-                                    { className: 'dropdown-header' },
-                                    i18n._('Language')
+                            _react2['default'].createElement(
+                                'li',
+                                { className: 'dropdown' },
+                                _react2['default'].createElement(
+                                    'a',
+                                    { href: '#', className: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button' },
+                                    _i18next2['default']._('Settings'),
+                                    ' ',
+                                    _react2['default'].createElement('span', { className: 'caret' })
                                 ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=de' },
-                                        'Deutsch'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=en' },
-                                        'English (US)'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=es' },
-                                        'Español'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=fr' },
-                                        'Français'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=it' },
-                                        'Italiano'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=ja' },
-                                        '日本語'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=zh-cn' },
-                                        '中文 (简体)'
-                                    )
-                                ),
-                                React.createElement(
-                                    'li',
-                                    null,
-                                    React.createElement(
-                                        'a',
-                                        { href: '?lang=zh-tw' },
-                                        '中文 (繁體)'
+                                _react2['default'].createElement(
+                                    'ul',
+                                    { className: 'dropdown-menu', role: 'menu' },
+                                    _react2['default'].createElement(
+                                        'li',
+                                        { className: 'dropdown-header' },
+                                        _i18next2['default']._('Language')
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=de' },
+                                            'Deutsch'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=en' },
+                                            'English (US)'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=es' },
+                                            'Español'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=fr' },
+                                            'Français'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=it' },
+                                            'Italiano'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=ja' },
+                                            '日本語'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=zh-cn' },
+                                            '中文 (简体)'
+                                        )
+                                    ),
+                                    _react2['default'].createElement(
+                                        'li',
+                                        null,
+                                        _react2['default'].createElement(
+                                            'a',
+                                            { href: '?lang=zh-tw' },
+                                            '中文 (繁體)'
+                                        )
                                     )
                                 )
                             )
                         )
                     )
                 )
-            )
-        );
-    }
-});
+            );
+        }
+    }]);
+
+    return Header;
+})(_react2['default'].Component);
 
 module.exports = {
     Header: Header
@@ -2337,64 +2558,242 @@ module.exports = {
 },{"i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/home/index.jsx":[function(require,module,exports){
 'use strict';
 
-var React = require('react');
-var i18n = require('i18next');
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var Home = React.createClass({
-    displayName: 'Home',
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-    render: function render() {
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _i18next = require('i18next');
+
+var _i18next2 = _interopRequireDefault(_i18next);
+
+var Home = (function (_React$Component) {
+    _inherits(Home, _React$Component);
+
+    function Home() {
+        _classCallCheck(this, Home);
+
+        _get(Object.getPrototypeOf(Home.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(Home, [{
+        key: 'render',
+        value: function render() {
+            return _react2['default'].createElement(
                 'div',
-                { className: 'jumbotron' },
-                React.createElement(
+                null,
+                _react2['default'].createElement(
                     'div',
-                    { className: 'container' },
-                    React.createElement(
-                        'h1',
-                        null,
-                        i18n._('Welcome to WebAppEngine!')
-                    ),
-                    React.createElement(
-                        'p',
-                        null,
-                        i18n._('If you see this page, the WebAppEngine server is successfully installed and working. Further configuration is required.')
-                    ),
-                    React.createElement('p', { dangerouslySetInnerHTML: { __html: i18n._('For online documentation please refer to <a href="http://cheton.github.io/webappengine/">http://cheton.github.io/webappengine/</a>.') } }),
-                    React.createElement(
-                        'p',
-                        null,
-                        React.createElement(
-                            'a',
-                            { className: 'btn btn-primary btn-lg', href: 'https://github.com/cheton/webappengine', role: 'button' },
-                            i18n._('Learn more »')
-                        )
-                    ),
-                    React.createElement(
-                        'p',
-                        null,
-                        React.createElement(
-                            'i',
+                    { className: 'jumbotron' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'container' },
+                        _react2['default'].createElement(
+                            'h1',
                             null,
-                            i18n._('Thank you for using WebAppEngine.')
+                            _i18next2['default']._('Welcome to WebAppEngine!')
+                        ),
+                        _react2['default'].createElement(
+                            'p',
+                            null,
+                            _i18next2['default']._('If you see this page, the WebAppEngine server is successfully installed and working. Further configuration is required.')
+                        ),
+                        _react2['default'].createElement('p', { dangerouslySetInnerHTML: { __html: _i18next2['default']._('For online documentation please refer to <a href="http://cheton.github.io/webappengine/">http://cheton.github.io/webappengine/</a>.') } }),
+                        _react2['default'].createElement(
+                            'p',
+                            null,
+                            _react2['default'].createElement(
+                                'a',
+                                { className: 'btn btn-primary btn-lg', href: 'https://github.com/cheton/webappengine', role: 'button' },
+                                _i18next2['default']._('Learn more »')
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'p',
+                            null,
+                            _react2['default'].createElement(
+                                'i',
+                                null,
+                                _i18next2['default']._('Thank you for using WebAppEngine.')
+                            )
                         )
                     )
-                )
-            ),
-            React.createElement('div', { className: 'container' })
-        );
-    }
-});
+                ),
+                _react2['default'].createElement('div', { className: 'container' })
+            );
+        }
+    }]);
+
+    return Home;
+})(_react2['default'].Component);
 
 module.exports = {
     Home: Home
 };
 
 
-},{"i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/config/settings.js":[function(require,module,exports){
+},{"i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/widget/index.jsx":[function(require,module,exports){
+'use strict';
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _i18next = require('i18next');
+
+var _i18next2 = _interopRequireDefault(_i18next);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+require('./widget.css');
+
+var WidgetHeader = (function (_React$Component) {
+    _inherits(WidgetHeader, _React$Component);
+
+    function WidgetHeader() {
+        _classCallCheck(this, WidgetHeader);
+
+        _get(Object.getPrototypeOf(WidgetHeader.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(WidgetHeader, [{
+        key: 'render',
+        value: function render() {
+            var options = this.props.options;
+
+            options = options || {};
+            return _react2['default'].createElement(
+                'div',
+                { className: 'widget-header clearfix' },
+                _react2['default'].createElement(
+                    'h3',
+                    { className: 'widget-header-title' },
+                    _react2['default'].createElement('i', { className: 'icon ion-pricetag' }),
+                    ' ',
+                    _react2['default'].createElement(
+                        'span',
+                        null,
+                        options.title
+                    )
+                ),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'btn-group widget-header-toolbar' },
+                    _react2['default'].createElement(
+                        'a',
+                        { href: '#', title: 'Expand/Collapse', className: 'btn btn-link btn-toggle-expand' },
+                        _react2['default'].createElement('i', { className: 'icon ion-ios7-arrow-up' })
+                    ),
+                    _react2['default'].createElement(
+                        'a',
+                        { href: '#', title: 'Remove', className: 'btn btn-link btn-remove' },
+                        _react2['default'].createElement('i', { className: 'icon ion-ios7-close-empty' })
+                    )
+                )
+            );
+        }
+    }]);
+
+    return WidgetHeader;
+})(_react2['default'].Component);
+
+var WidgetContent = (function (_React$Component2) {
+    _inherits(WidgetContent, _React$Component2);
+
+    function WidgetContent() {
+        _classCallCheck(this, WidgetContent);
+
+        _get(Object.getPrototypeOf(WidgetContent.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(WidgetContent, [{
+        key: 'render',
+        value: function render() {
+            var options = this.props.options;
+
+            options = options || {};
+            return _react2['default'].createElement(
+                'div',
+                { className: 'widget-content' },
+                options.content
+            );
+        }
+    }]);
+
+    return WidgetContent;
+})(_react2['default'].Component);
+
+var WidgetFooter = (function (_React$Component3) {
+    _inherits(WidgetFooter, _React$Component3);
+
+    function WidgetFooter() {
+        _classCallCheck(this, WidgetFooter);
+
+        _get(Object.getPrototypeOf(WidgetFooter.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(WidgetFooter, [{
+        key: 'render',
+        value: function render() {
+            return _react2['default'].createElement('div', { className: 'widget-footer' });
+        }
+    }]);
+
+    return WidgetFooter;
+})(_react2['default'].Component);
+
+var Widget = (function (_React$Component4) {
+    _inherits(Widget, _React$Component4);
+
+    function Widget() {
+        _classCallCheck(this, Widget);
+
+        _get(Object.getPrototypeOf(Widget.prototype), 'constructor', this).apply(this, arguments);
+    }
+
+    _createClass(Widget, [{
+        key: 'render',
+        value: function render() {
+            var options = this.props.options;
+
+            options = options || {};
+            return _react2['default'].createElement(
+                'div',
+                { className: 'widget' },
+                !options.noheader && _react2['default'].createElement(WidgetHeader, { options: options }),
+                _react2['default'].createElement(WidgetContent, { options: options })
+            );
+        }
+    }]);
+
+    return Widget;
+})(_react2['default'].Component);
+
+module.exports = {
+    Widget: Widget
+};
+
+
+},{"./widget.css":"/home/cheton/github/webappengine/web/components/widget/widget.css","i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/widget/widget.css":[function(require,module,exports){
+var css = ".widget{border-radius:3px;border-width:1px;border-style:solid;margin-bottom:20px;background-color:#fff;border-color:#d0d0d0}.widget.widget-no-header .widget-title{margin-top:0;font-size:14px;color:#6a6a6a}.widget .widget-header{padding:0 10px;border-bottom:1px solid #fff;background-color:#e9e9e9}.widget .widget-header .widget-header-title{margin-top:0;font-size:14px;color:#6a6a6a;display:inline-block;vertical-align:middle;margin-bottom:0;line-height:40px}.widget .widget-header .btn-group .dropdown-toggle .icon,.widget .widget-header .btn-group>a{color:#838383}.widget .widget-header .btn-group .dropdown-toggle .icon:focus,.widget .widget-header .btn-group .dropdown-toggle .icon:hover,.widget .widget-header .btn-group>a:focus,.widget .widget-header .btn-group>a:hover{color:#505050}.widget .widget-header .widget-header-toolbar{float:right;width:auto;margin-left:15px}.widget .widget-header .widget-header-toolbar.btn-group{top:5px}.widget .widget-header .widget-header-toolbar .badge{margin-top:10px}.widget .widget-header .widget-header-toolbar .label{position:relative;top:11px;padding:5px;font-size:85%}.widget .widget-header .widget-header-toolbar .label i{font-size:14px}.widget .widget-header .widget-header-toolbar .btn-xs{top:5px}.widget .widget-header .widget-header-toolbar .btn-link{padding:0 0 0 15px}.widget .widget-header .widget-header-toolbar .btn-link:first-child{padding-left:0}.widget .widget-header .widget-header-toolbar .btn-link i{font-size:28px;line-height:1}@media screen and (max-width:480px){.widget .widget-header .widget-header-toolbar{display:block;position:inherit}.widget .widget-header .widget-header-toolbar.btn-group>.btn{top:-5px}.widget .widget-header .widget-header-toolbar .badge{margin-top:0}.widget .widget-header .widget-header-toolbar .label{top:0}}.widget .widget-content{padding:20px}.widget .widget-footer{padding:7px 10px;background-color:#e9e9e9}"; (require("browserify-css").createStyle(css, { "href": "components/widget/widget.css"})); module.exports = css;
+},{"browserify-css":"/home/cheton/github/webappengine/node_modules/browserify-css/browser.js"}],"/home/cheton/github/webappengine/web/config/settings.js":[function(require,module,exports){
 'use strict';
 
 var root = window.root;

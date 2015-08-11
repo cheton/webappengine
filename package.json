@@ -96,6 +96,7 @@
     "i18next-scanner": "^0.5.1",
     "main-bower-files": "2.6.x",
     "merge-stream": "^0.1.7",
+    "nib": "^1.1.0",
     "node-bourbon": "^1.2.3",
     "node-jsx": "^0.13.3",
     "reactify": "^1.1.1",

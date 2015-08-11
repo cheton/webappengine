@@ -1,11 +1,9 @@
-var React = require('react');
-var Router = require('react-router');
-var Route = Router.Route;
-var Link = Router.Link;
-var i18n = require('i18next');
+import i18n from 'i18next';
+import React from 'react';
+import { Route, Link } from 'react-router';
 
-var Header = React.createClass({
-    render: function() {
+class Header extends React.Component {
+    render() {
         return (
             <nav className="navbar navbar-inverse navbar-fixed-top">
                 <div className="container">
@@ -41,7 +39,7 @@ var Header = React.createClass({
             </nav>
         );
     }
-});
+}
 
 module.exports = {
     Header: Header
