@@ -122,6 +122,7 @@
     "react": "./web/vendor/react/react.js",
     "react-router": "./web/vendor/react-router/build/umd/ReactRouter.js",
     "rx": "./web/vendor/rxjs/dist/rx.all.js",
+    "Sortable": "./web/vendor/Sortable/Sortable.js",
     "stacktrace": "./web/vendor/stacktrace-js/stacktrace.js"
   },
   "browserify-shim": "./config/shim.js"
