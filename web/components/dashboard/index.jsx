@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import React from 'react';
-import reactMixin from 'react-mixin';
 import Sortable from 'Sortable';
 import { Widget } from '../widget';
 
