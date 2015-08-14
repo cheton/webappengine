@@ -1,16 +1,13 @@
-var log = require('./lib/log');
-var React = require('react');
-var Router = require('react-router');
-var Route = Router.Route,
-    DefaultRoute = Router.DefaultRoute,
-    Link = Router.Link,
-    RouteHandler = Router.RouteHandler;
-var Header = require('./components/header').Header;
-var Home = require('./components/home').Home;
-var Dashboard = require('./components/dashboard').Dashboard;
+import log from './lib/log';
+import React from 'react';
+import Router from 'react-router';
+import { Route, DefaultRoute, Link, RouteHandler } from 'react-router';
+import { Header } from './components/header';
+import { Home } from './components/home';
+import { Dashboard } from './components/dashboard';
 
-var App = React.createClass({
-    render: function () {
+class App extends React.Component {
+    render() {
         var style = {
             paddingTop: '50px',
             paddingBottom: '20px'
@@ -22,11 +19,11 @@ var App = React.createClass({
             </div>
         );
     }
-});
+}
 
 module.exports = {
     App: App,
-    run: function() {
+    run() {
         var routes = (
             <Route name="app" path="/" handler={App}>
                 <DefaultRoute handler={Home}/>
