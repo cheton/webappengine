@@ -5,14 +5,14 @@ require('./widget.css');
 
 class WidgetHeader extends React.Component {
     render() {
-        var { options } = this.props;
+        let { options } = this.props;
         options = options || {};
         return (
             <div className="widget-header clearfix">
                 <h3 className="widget-header-title"><i className="icon ion-pricetag"></i>&nbsp;<span>{options.title}</span></h3>
                 <div className="btn-group widget-header-toolbar">
-                    <a href="#" title="Expand/Collapse" className="btn btn-link btn-toggle-expand"><i className="icon ion-ios7-arrow-up"></i></a>
-                    <a href="#" title="Remove" className="btn btn-link btn-remove"><i className="icon ion-ios7-close-empty"></i></a>
+                    <a href="javascript: void(0)" title="Expand/Collapse" className="btn btn-link btn-toggle-expand" onClick={this.props.handleClick.bind(this, 'btn-toggle-expand')}><i className="icon ion-ios-arrow-up"></i></a>
+                    <a href="javascript: void(0)" title="Remove" className="btn btn-link btn-remove" onClick={this.props.handleClick.bind(this, 'btn-remove')}><i className="icon ion-ios-close-empty"></i></a>
                 </div>
             </div>
         );
@@ -21,7 +21,7 @@ class WidgetHeader extends React.Component {
 
 class WidgetContent extends React.Component {
     render() {
-        var { options } = this.props;
+        let { options } = this.props;
         options = options || {};
         return (
             <div className="widget-content">{options.content}</div>
@@ -37,21 +37,36 @@ class WidgetFooter extends React.Component {
     }
 }
 
-class Widget extends React.Component {
+export class Widget extends React.Component {
+    handleClick(target) {
+        if (target === 'btn-remove') {
+            this.unmount();
+        }
+    }
+    unmount() {
+        let container = React.findDOMNode(this.refs.widgetContainer);
+        React.unmountComponentAtNode(container);
+        container.remove();
+    }
+    componentWillUnmount() {
+        console.log('componentWillUnmount');
+    }
+    componentDidUnmount() {
+        console.log('componentDidUnmount');
+    }
     render() {
-        var { options } = this.props;
+        let { options } = this.props;
         options = options || {};
+        options.containerClass = (options.containerClass || '');
         return (
-            <div className="widget">
-                { ! options.noheader && 
-                    <WidgetHeader options={options}/>
-                }
-                <WidgetContent options={options}/>
+            <div className={options.containerClass} ref="widgetContainer">
+                <div className="widget">
+                    { ! options.noheader && 
+                        <WidgetHeader options={options} handleClick={this.handleClick.bind(this)}/>
+                    }
+                    <WidgetContent options={options}/>
+                </div>
             </div>
         );
     }
 }
-
-module.exports = {
-    Widget: Widget
-};

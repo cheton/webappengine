@@ -3,9 +3,10 @@ import React from 'react';
 import Sortable from 'Sortable';
 import { Widget } from '../widget';
 
-class Widget1 extends Widget {
+class Widget1 extends React.Component {
     render() {
         var options = {
+            containerClass: 'col-sm-6',
             title: 'WIDGET 1',
             content: (
                 <div>
@@ -19,9 +20,10 @@ class Widget1 extends Widget {
     }
 }
 
-class Widget2 extends Widget {
+class Widget2 extends React.Component {
     render() {
         var options = {
+            containerClass: 'col-sm-6',
             title: 'WIDGET 2',
             content: (
                 <div>
@@ -35,9 +37,10 @@ class Widget2 extends Widget {
     }
 }
 
-class Widget3 extends Widget {
+class Widget3 extends React.Component {
     render() {
         var options = {
+            containerClass: 'col-sm-12',
             noheader: true,
             content: (
                 <div>
@@ -59,7 +62,9 @@ class WidgetList extends React.Component {
     }
     componentDidMount() {
         var dom = React.findDOMNode(this);
-        this._sortableInstance = Sortable.create(dom);
+        this._sortableInstance = Sortable.create(dom, {
+            filter: '.widget-content'
+        });
     }
     componentWillUnmount() {
         this._sortableInstance.destroy();
@@ -68,21 +73,15 @@ class WidgetList extends React.Component {
     render() {
         return (
             <div className="row">
-                <div className="col-sm-6">
-                    <Widget1/>
-                </div>
-                <div className="col-sm-6">
-                    <Widget2/>
-                </div>
-                <div className="col-sm-12">
-                    <Widget3/>
-                </div>
+                <Widget1/>
+                <Widget2/>
+                <Widget3/>
             </div>
         );
     }
 }
 
-class Dashboard extends React.Component {
+export class Dashboard extends React.Component {
     render() {
         return (
             <div className="container no-heading">
@@ -91,7 +90,3 @@ class Dashboard extends React.Component {
         );
     }
 }
-
-module.exports = {
-    Dashboard: Dashboard
-};

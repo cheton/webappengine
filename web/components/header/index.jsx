@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import React from 'react';
 import { Route, Link } from 'react-router';
 
-class Header extends React.Component {
+export class Header extends React.Component {
     render() {
         return (
             <nav className="navbar navbar-inverse navbar-fixed-top">
@@ -40,7 +40,3 @@ class Header extends React.Component {
         );
     }
 }
-
-module.exports = {
-    Header: Header
-};
