@@ -791,20 +791,84 @@ function base64Slice (buf, start, end) {
 }
 
 function utf8Slice (buf, start, end) {
-  var res = ''
-  var tmp = ''
   end = Math.min(buf.length, end)
+  var firstByte
+  var secondByte
+  var thirdByte
+  var fourthByte
+  var bytesPerSequence
+  var tempCodePoint
+  var codePoint
+  var res = []
+  var i = start
 
-  for (var i = start; i < end; i++) {
-    if (buf[i] <= 0x7F) {
-      res += decodeUtf8Char(tmp) + String.fromCharCode(buf[i])
-      tmp = ''
+  for (; i < end; i += bytesPerSequence) {
+    firstByte = buf[i]
+    codePoint = 0xFFFD
+
+    if (firstByte > 0xEF) {
+      bytesPerSequence = 4
+    } else if (firstByte > 0xDF) {
+      bytesPerSequence = 3
+    } else if (firstByte > 0xBF) {
+      bytesPerSequence = 2
     } else {
-      tmp += '%' + buf[i].toString(16)
+      bytesPerSequence = 1
     }
+
+    if (i + bytesPerSequence <= end) {
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1]
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1]
+          thirdByte = buf[i + 2]
+          fourthByte = buf[i + 3]
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint
+            }
+          }
+      }
+    }
+
+    if (codePoint === 0xFFFD) {
+      // we generated an invalid codePoint so make sure to only advance by 1 byte
+      bytesPerSequence = 1
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+      codePoint = 0xDC00 | codePoint & 0x3FF
+    }
+
+    res.push(codePoint)
   }
 
-  return res + decodeUtf8Char(tmp)
+  return String.fromCharCode.apply(String, res)
 }
 
 function asciiSlice (buf, start, end) {
@@ -1510,47 +1574,48 @@ function utf8ToBytes (string, units) {
   var length = string.length
   var leadSurrogate = null
   var bytes = []
-  var i = 0
 
-  for (; i < length; i++) {
+  for (var i = 0; i < length; i++) {
     codePoint = string.charCodeAt(i)
 
     // is surrogate component
     if (codePoint > 0xD7FF && codePoint < 0xE000) {
       // last char was a lead
-      if (leadSurrogate) {
-        // 2 leads in a row
-        if (codePoint < 0xDC00) {
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          leadSurrogate = codePoint
-          continue
-        } else {
-          // valid surrogate pair
-          codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
-          leadSurrogate = null
-        }
-      } else {
+      if (!leadSurrogate) {
         // no lead yet
-
         if (codePoint > 0xDBFF) {
           // unexpected trail
           if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
           continue
+
         } else if (i + 1 === length) {
           // unpaired lead
           if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
           continue
-        } else {
-          // valid lead
-          leadSurrogate = codePoint
-          continue
         }
+
+        // valid lead
+        leadSurrogate = codePoint
+
+        continue
       }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+        leadSurrogate = codePoint
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
+
     } else if (leadSurrogate) {
       // valid bmp char, but last char was a lead
       if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-      leadSurrogate = null
     }
+
+    leadSurrogate = null
 
     // encode utf8
     if (codePoint < 0x80) {
@@ -1569,7 +1634,7 @@ function utf8ToBytes (string, units) {
         codePoint >> 0x6 & 0x3F | 0x80,
         codePoint & 0x3F | 0x80
       )
-    } else if (codePoint < 0x200000) {
+    } else if (codePoint < 0x110000) {
       if ((units -= 4) < 0) break
       bytes.push(
         codePoint >> 0x12 | 0xF0,
@@ -1620,14 +1685,6 @@ function blitBuffer (src, dst, offset, length) {
     dst[i + offset] = src[i]
   }
   return i
-}
-
-function decodeUtf8Char (str) {
-  try {
-    return decodeURIComponent(str)
-  } catch (err) {
-    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
-  }
 }
 
 },{"base64-js":"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","ieee754":"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","is-array":"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/node_modules/is-array/index.js"}],"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js":[function(require,module,exports){
@@ -2160,9 +2217,15 @@ module.exports = charenc;
 },{"buffer":"/home/cheton/github/webappengine/node_modules/browserify/node_modules/buffer/index.js","charenc":"/home/cheton/github/webappengine/node_modules/sha1/node_modules/charenc/charenc.js","crypt":"/home/cheton/github/webappengine/node_modules/sha1/node_modules/crypt/crypt.js"}],"/home/cheton/github/webappengine/web/app.jsx":[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+exports.run = run;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -2216,24 +2279,27 @@ var App = (function (_React$Component) {
     return App;
 })(_react2['default'].Component);
 
-module.exports = {
-    App: App,
-    run: function run() {
-        var routes = _react2['default'].createElement(
-            _reactRouter.Route,
-            { name: 'app', path: '/', handler: App },
-            _react2['default'].createElement(_reactRouter.DefaultRoute, { handler: _componentsHome.Home }),
-            _react2['default'].createElement(_reactRouter.Route, { name: 'dashboard', handler: _componentsDashboard.Dashboard })
-        );
-        _reactRouter2['default'].run(routes, function (Handler) {
-            _react2['default'].render(_react2['default'].createElement(Handler, null), document.querySelector('#components'));
-        });
-    }
-};
+exports.App = App;
+
+function run() {
+    var routes = _react2['default'].createElement(
+        _reactRouter.Route,
+        { name: 'app', path: '/', handler: App },
+        _react2['default'].createElement(_reactRouter.DefaultRoute, { handler: _componentsHome.Home }),
+        _react2['default'].createElement(_reactRouter.Route, { name: 'dashboard', handler: _componentsDashboard.Dashboard })
+    );
+    _reactRouter2['default'].run(routes, function (Handler) {
+        _react2['default'].render(_react2['default'].createElement(Handler, null), document.querySelector('#components'));
+    });
+}
 
 
 },{"./components/dashboard":"/home/cheton/github/webappengine/web/components/dashboard/index.jsx","./components/header":"/home/cheton/github/webappengine/web/components/header/index.jsx","./components/home":"/home/cheton/github/webappengine/web/components/home/index.jsx","./lib/log":"/home/cheton/github/webappengine/web/lib/log.js","react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/dashboard/index.jsx":[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2259,8 +2325,8 @@ var _Sortable2 = _interopRequireDefault(_Sortable);
 
 var _widget = require('../widget');
 
-var Widget1 = (function (_Widget) {
-    _inherits(Widget1, _Widget);
+var Widget1 = (function (_React$Component) {
+    _inherits(Widget1, _React$Component);
 
     function Widget1() {
         _classCallCheck(this, Widget1);
@@ -2272,6 +2338,7 @@ var Widget1 = (function (_Widget) {
         key: 'render',
         value: function render() {
             var options = {
+                containerClass: 'col-sm-6',
                 title: 'WIDGET 1',
                 content: _react2['default'].createElement(
                     'div',
@@ -2288,10 +2355,10 @@ var Widget1 = (function (_Widget) {
     }]);
 
     return Widget1;
-})(_widget.Widget);
+})(_react2['default'].Component);
 
-var Widget2 = (function (_Widget2) {
-    _inherits(Widget2, _Widget2);
+var Widget2 = (function (_React$Component2) {
+    _inherits(Widget2, _React$Component2);
 
     function Widget2() {
         _classCallCheck(this, Widget2);
@@ -2303,6 +2370,7 @@ var Widget2 = (function (_Widget2) {
         key: 'render',
         value: function render() {
             var options = {
+                containerClass: 'col-sm-6',
                 title: 'WIDGET 2',
                 content: _react2['default'].createElement(
                     'div',
@@ -2319,10 +2387,10 @@ var Widget2 = (function (_Widget2) {
     }]);
 
     return Widget2;
-})(_widget.Widget);
+})(_react2['default'].Component);
 
-var Widget3 = (function (_Widget3) {
-    _inherits(Widget3, _Widget3);
+var Widget3 = (function (_React$Component3) {
+    _inherits(Widget3, _React$Component3);
 
     function Widget3() {
         _classCallCheck(this, Widget3);
@@ -2334,6 +2402,7 @@ var Widget3 = (function (_Widget3) {
         key: 'render',
         value: function render() {
             var options = {
+                containerClass: 'col-sm-12',
                 noheader: true,
                 content: _react2['default'].createElement(
                     'div',
@@ -2355,10 +2424,10 @@ var Widget3 = (function (_Widget3) {
     }]);
 
     return Widget3;
-})(_widget.Widget);
+})(_react2['default'].Component);
 
-var WidgetList = (function (_React$Component) {
-    _inherits(WidgetList, _React$Component);
+var WidgetList = (function (_React$Component4) {
+    _inherits(WidgetList, _React$Component4);
 
     function WidgetList(props) {
         _classCallCheck(this, WidgetList);
@@ -2371,7 +2440,9 @@ var WidgetList = (function (_React$Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
             var dom = _react2['default'].findDOMNode(this);
-            this._sortableInstance = _Sortable2['default'].create(dom);
+            this._sortableInstance = _Sortable2['default'].create(dom, {
+                filter: '.widget-content'
+            });
         }
     }, {
         key: 'componentWillUnmount',
@@ -2385,21 +2456,9 @@ var WidgetList = (function (_React$Component) {
             return _react2['default'].createElement(
                 'div',
                 { className: 'row' },
-                _react2['default'].createElement(
-                    'div',
-                    { className: 'col-sm-6' },
-                    _react2['default'].createElement(Widget1, null)
-                ),
-                _react2['default'].createElement(
-                    'div',
-                    { className: 'col-sm-6' },
-                    _react2['default'].createElement(Widget2, null)
-                ),
-                _react2['default'].createElement(
-                    'div',
-                    { className: 'col-sm-12' },
-                    _react2['default'].createElement(Widget3, null)
-                )
+                _react2['default'].createElement(Widget1, null),
+                _react2['default'].createElement(Widget2, null),
+                _react2['default'].createElement(Widget3, null)
             );
         }
     }]);
@@ -2407,8 +2466,8 @@ var WidgetList = (function (_React$Component) {
     return WidgetList;
 })(_react2['default'].Component);
 
-var Dashboard = (function (_React$Component2) {
-    _inherits(Dashboard, _React$Component2);
+var Dashboard = (function (_React$Component5) {
+    _inherits(Dashboard, _React$Component5);
 
     function Dashboard() {
         _classCallCheck(this, Dashboard);
@@ -2430,13 +2489,15 @@ var Dashboard = (function (_React$Component2) {
     return Dashboard;
 })(_react2['default'].Component);
 
-module.exports = {
-    Dashboard: Dashboard
-};
+exports.Dashboard = Dashboard;
 
 
 },{"../widget":"/home/cheton/github/webappengine/web/components/widget/index.jsx","Sortable":"/home/cheton/github/webappengine/web/vendor/Sortable/Sortable.js","i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/header/index.jsx":[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2610,13 +2671,15 @@ var Header = (function (_React$Component) {
     return Header;
 })(_react2['default'].Component);
 
-module.exports = {
-    Header: Header
-};
+exports.Header = Header;
 
 
 },{"i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react","react-router":"/home/cheton/github/webappengine/web/vendor/react-router/build/umd/ReactRouter.js"}],"/home/cheton/github/webappengine/web/components/home/index.jsx":[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2696,13 +2759,15 @@ var Home = (function (_React$Component) {
     return Home;
 })(_react2['default'].Component);
 
-module.exports = {
-    Home: Home
-};
+exports.Home = Home;
 
 
 },{"i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/widget/index.jsx":[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2758,13 +2823,13 @@ var WidgetHeader = (function (_React$Component) {
                     { className: 'btn-group widget-header-toolbar' },
                     _react2['default'].createElement(
                         'a',
-                        { href: '#', title: 'Expand/Collapse', className: 'btn btn-link btn-toggle-expand' },
-                        _react2['default'].createElement('i', { className: 'icon ion-ios7-arrow-up' })
+                        { href: 'javascript: void(0)', title: 'Expand/Collapse', className: 'btn btn-link btn-toggle-expand', onClick: this.props.handleClick.bind(this, 'btn-toggle-expand') },
+                        _react2['default'].createElement('i', { className: 'icon ion-ios-arrow-up' })
                     ),
                     _react2['default'].createElement(
                         'a',
-                        { href: '#', title: 'Remove', className: 'btn btn-link btn-remove' },
-                        _react2['default'].createElement('i', { className: 'icon ion-ios7-close-empty' })
+                        { href: 'javascript: void(0)', title: 'Remove', className: 'btn btn-link btn-remove', onClick: this.props.handleClick.bind(this, 'btn-remove') },
+                        _react2['default'].createElement('i', { className: 'icon ion-ios-close-empty' })
                     )
                 )
             );
@@ -2829,16 +2894,45 @@ var Widget = (function (_React$Component4) {
     }
 
     _createClass(Widget, [{
+        key: 'handleClick',
+        value: function handleClick(target) {
+            if (target === 'btn-remove') {
+                this.unmount();
+            }
+        }
+    }, {
+        key: 'unmount',
+        value: function unmount() {
+            var container = _react2['default'].findDOMNode(this.refs.widgetContainer);
+            _react2['default'].unmountComponentAtNode(container);
+            container.remove();
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            console.log('componentWillUnmount');
+        }
+    }, {
+        key: 'componentDidUnmount',
+        value: function componentDidUnmount() {
+            console.log('componentDidUnmount');
+        }
+    }, {
         key: 'render',
         value: function render() {
             var options = this.props.options;
 
             options = options || {};
+            options.containerClass = options.containerClass || '';
             return _react2['default'].createElement(
                 'div',
-                { className: 'widget' },
-                !options.noheader && _react2['default'].createElement(WidgetHeader, { options: options }),
-                _react2['default'].createElement(WidgetContent, { options: options })
+                { className: options.containerClass, ref: 'widgetContainer' },
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'widget' },
+                    !options.noheader && _react2['default'].createElement(WidgetHeader, { options: options, handleClick: this.handleClick.bind(this) }),
+                    _react2['default'].createElement(WidgetContent, { options: options })
+                )
             );
         }
     }]);
@@ -2846,13 +2940,11 @@ var Widget = (function (_React$Component4) {
     return Widget;
 })(_react2['default'].Component);
 
-module.exports = {
-    Widget: Widget
-};
+exports.Widget = Widget;
 
 
 },{"./widget.css":"/home/cheton/github/webappengine/web/components/widget/widget.css","i18next":"/home/cheton/github/webappengine/web/vendor/i18next/i18next.js","react":"react"}],"/home/cheton/github/webappengine/web/components/widget/widget.css":[function(require,module,exports){
-var css = ".widget{border-radius:3px;border-width:1px;border-style:solid;margin-bottom:20px;background-color:#fff;border-color:#d0d0d0}.widget.widget-no-header .widget-title{margin-top:0;font-size:14px;color:#6a6a6a}.widget .widget-header{padding:0 10px;border-bottom:1px solid #fff;background-color:#e9e9e9}.widget .widget-header .widget-header-title{margin-top:0;font-size:14px;color:#6a6a6a;display:inline-block;vertical-align:middle;margin-bottom:0;line-height:40px}.widget .widget-header .btn-group .dropdown-toggle .icon,.widget .widget-header .btn-group>a{color:#838383}.widget .widget-header .btn-group .dropdown-toggle .icon:focus,.widget .widget-header .btn-group .dropdown-toggle .icon:hover,.widget .widget-header .btn-group>a:focus,.widget .widget-header .btn-group>a:hover{color:#505050}.widget .widget-header .widget-header-toolbar{float:right;width:auto;margin-left:15px}.widget .widget-header .widget-header-toolbar.btn-group{top:5px}.widget .widget-header .widget-header-toolbar .badge{margin-top:10px}.widget .widget-header .widget-header-toolbar .label{position:relative;top:11px;padding:5px;font-size:85%}.widget .widget-header .widget-header-toolbar .label i{font-size:14px}.widget .widget-header .widget-header-toolbar .btn-xs{top:5px}.widget .widget-header .widget-header-toolbar .btn-link{padding:0 0 0 15px}.widget .widget-header .widget-header-toolbar .btn-link:first-child{padding-left:0}.widget .widget-header .widget-header-toolbar .btn-link i{font-size:28px;line-height:1}@media screen and (max-width:480px){.widget .widget-header .widget-header-toolbar{display:block;position:inherit}.widget .widget-header .widget-header-toolbar.btn-group>.btn{top:-5px}.widget .widget-header .widget-header-toolbar .badge{margin-top:0}.widget .widget-header .widget-header-toolbar .label{top:0}}.widget .widget-content{padding:20px}.widget .widget-footer{padding:7px 10px;background-color:#e9e9e9}"; (require("browserify-css").createStyle(css, { "href": "components/widget/widget.css"})); module.exports = css;
+var css = ".widget{border-radius:3px;border-width:1px;border-style:solid;margin-bottom:20px;background-color:#fff;border-color:#d0d0d0}.widget.widget-no-header .widget-title{margin-top:0;font-size:14px;color:#6a6a6a}.widget .widget-header{padding:0 10px;border-bottom:1px solid #fff;background-color:#e9e9e9}.widget .widget-header .widget-header-title{margin-top:0;font-size:14px;color:#6a6a6a;display:inline-block;vertical-align:middle;margin-bottom:0;line-height:40px}.widget .widget-header .btn-group .dropdown-toggle .icon,.widget .widget-header .btn-group>a{color:#838383}.widget .widget-header .btn-group .dropdown-toggle .icon:focus,.widget .widget-header .btn-group .dropdown-toggle .icon:hover,.widget .widget-header .btn-group>a:focus,.widget .widget-header .btn-group>a:hover{color:#505050}.widget .widget-header .btn i{position:relative;top:0;margin-right:2px;font-size:16px;line-height:1}.widget .widget-header .widget-header-toolbar{float:right;width:auto;margin-left:15px}.widget .widget-header .widget-header-toolbar.btn-group{top:5px}.widget .widget-header .widget-header-toolbar .badge{margin-top:10px}.widget .widget-header .widget-header-toolbar .label{position:relative;top:11px;padding:5px;font-size:85%}.widget .widget-header .widget-header-toolbar .label i{font-size:14px}.widget .widget-header .widget-header-toolbar .btn-xs{top:5px}.widget .widget-header .widget-header-toolbar .btn-link{padding:0 0 0 15px}.widget .widget-header .widget-header-toolbar .btn-link:first-child{padding-left:0}.widget .widget-header .widget-header-toolbar .btn-link i{font-size:28px;line-height:1}@media screen and (max-width:480px){.widget .widget-header .widget-header-toolbar{display:block;position:inherit}.widget .widget-header .widget-header-toolbar.btn-group>.btn{top:-5px}.widget .widget-header .widget-header-toolbar .badge{margin-top:0}.widget .widget-header .widget-header-toolbar .label{top:0}}.widget .widget-content{padding:20px}.widget .widget-footer{padding:7px 10px;background-color:#e9e9e9}"; (require("browserify-css").createStyle(css, { "href": "components/widget/widget.css"})); module.exports = css;
 },{"browserify-css":"/home/cheton/github/webappengine/node_modules/browserify-css/browser.js"}],"/home/cheton/github/webappengine/web/config/settings.js":[function(require,module,exports){
 'use strict';
 
