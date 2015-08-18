@@ -1,40 +1,34 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
     <title>WebAppEngine by cheton</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>WebAppEngine</h1>
-        <p>A web application platform that can host multiple web apps running with Node.js</p>
+    <section class="page-header">
+      <h1 class="project-name">WebAppEngine</h1>
+      <h2 class="project-tagline">A web application platform that can host multiple web apps running with Node.js</h2>
+      <a href="https://github.com/cheton/webappengine" class="btn">View on GitHub</a>
+      <a href="https://github.com/cheton/webappengine/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/cheton/webappengine/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-        <p class="view"><a href="https://github.com/cheton/webappengine">View the Project on GitHub <small>cheton/webappengine</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/cheton/webappengine/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/cheton/webappengine/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/cheton/webappengine">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
+    <section class="main-content">
+      <h1>
 <a id="webappengine--" class="anchor" href="#webappengine--" aria-hidden="true"><span class="octicon octicon-link"></span></a>WebAppEngine <a href="https://travis-ci.org/cheton/webappengine"><img src="https://travis-ci.org/cheton/webappengine.svg?branch=master" alt="build status"></a> <a href="https://coveralls.io/r/cheton/webappengine"><img src="https://coveralls.io/repos/cheton/webappengine/badge.svg" alt="Coverage Status"></a>
 </h1>
 
 <p><a href="https://nodei.co/npm/webappengine/"><img src="https://nodei.co/npm/webappengine.png?downloads=true&amp;stars=true" alt="NPM"></a>    </p>
 
 <p>A web application platform that can host multiple web apps running with Node.js.</p>
+
+<p><img src="https://github.com/cheton/webappengine/blob/master/media/screenshot.png" alt="WebAppEngine">
+<i>Note. The administration UI is currently under construction.</i></p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -57,6 +51,98 @@
 <p>Set the environment variable <code>NODE_ENV</code> to <code>production</code> if you are running in production mode:</p>
 
 <div class="highlight highlight-bash"><pre>$ NODE_ENV=production webappengine</pre></div>
+
+<p>Run <code>webappengine</code> with <code>-h</code> for detailed usage:</p>
+
+<pre><code>$ webappengine -h
+
+  Usage: webappengine [options]
+
+  Options:
+    -h, --help               output usage information
+    -V, --version            output the version number
+    -c, --config [filename]  set multihost configuration file
+                             (default: node_modules/webappengine/app/config/multihost.json)
+</code></pre>
+
+<h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<h3>
+<a id="working-with-static-assets" class="anchor" href="#working-with-static-assets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working with static assets</h3>
+
+<p>The following configuration will serve static assets from the directory:</p>
+
+<p>static-config.json:</p>
+
+<div class="highlight highlight-json"><pre>[
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>static<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>route<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>directory<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/web/<span class="pl-pds">"</span></span>
+    }
+]</pre></div>
+
+<p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file, like so:</p>
+
+<div class="highlight highlight-bash"><pre>$ webappengine --config <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/static-config.json<span class="pl-pds">"</span></span></pre></div>
+
+<p>Visits <code>http://yourhostname:8000/</code> will serve <code>index.html</code> file as below:</p>
+
+<pre><code>&lt;h1&gt;WebAppEngine Test Page&lt;/h1&gt;
+</code></pre>
+
+<p>(See also: <a href="examples/static/index.html">examples/static/index.html</a>)</p>
+
+<h3>
+<a id="configure-multihost-settings-to-run-multiple-web-apps" class="anchor" href="#configure-multihost-settings-to-run-multiple-web-apps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configure multihost settings to run multiple web apps</h3>
+
+<p>First, checkout <a href="examples/simple/app.js">examples/simple/app.js</a> and <a href="examples/multihost.json">examples/multihost.json</a>, and copy <a href="examples">examples</a> to your project folder to kickstart a web application.</p>
+
+<p>simple/app.js:</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> path <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>path<span class="pl-pds">'</span></span>),
+    express <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>express<span class="pl-pds">'</span></span>);
+
+<span class="pl-c1">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">options</span>) {
+    options <span class="pl-k">=</span> options <span class="pl-k">||</span> {};
+
+    <span class="pl-k">var</span> app <span class="pl-k">=</span> <span class="pl-c1">express</span>();
+    <span class="pl-k">var</span> serveStatic <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>serve-static<span class="pl-pds">'</span></span>);
+    <span class="pl-k">var</span> assetPath <span class="pl-k">=</span> path.<span class="pl-c1">resolve</span>(<span class="pl-c1">__dirname</span>, <span class="pl-s"><span class="pl-pds">'</span>web<span class="pl-pds">'</span></span>);
+
+    <span class="pl-c">// Enable case sensitivity routing: "/Foo" is not equal to "/foo"</span>
+    app.<span class="pl-c1">enable</span>(<span class="pl-s"><span class="pl-pds">'</span>case sensitive routing<span class="pl-pds">'</span></span>);
+    <span class="pl-c">// Disable strict routing: "/foo" and "/foo/" are treated the same</span>
+    app.<span class="pl-c1">disable</span>(<span class="pl-s"><span class="pl-pds">'</span>strict routing<span class="pl-pds">'</span></span>);
+
+    app.<span class="pl-c1">use</span>(options.<span class="pl-c1">route</span>, <span class="pl-c1">serveStatic</span>(assetPath));
+
+    <span class="pl-k">return</span> app;
+};</pre></div>
+
+<p>simple-config.json:</p>
+
+<div class="highlight highlight-json"><pre>[
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>route<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/simple<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>server<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/simple/app<span class="pl-pds">"</span></span>
+    }
+]</pre></div>
+
+<p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file, like so:</p>
+
+<div class="highlight highlight-bash"><pre>$ webappengine --config <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/simple-config.json<span class="pl-pds">"</span></span></pre></div>
+
+<p>Visits <code>http://yourhostname:8000/simple</code> will serve <code>index.html</code> file as below:</p>
+
+<pre><code>&lt;h1&gt;WebAppEngine Test Page&lt;/h1&gt;
+</code></pre>
+
+<p>(See also: <a href="examples/simple/web/index.html">examples/simple/web/index.html</a>)</p>
+
+<h2>
+<a id="internationalization-i18n" class="anchor" href="#internationalization-i18n" aria-hidden="true"><span class="octicon octicon-link"></span></a>Internationalization (I18n)</h2>
 
 <h3>
 <a id="change-the-display-language" class="anchor" href="#change-the-display-language" aria-hidden="true"><span class="octicon octicon-link"></span></a>Change the display language</h3>
@@ -114,13 +200,15 @@
 <p>Copyright (c) 2015 Cheton Wu</p>
 
 <p>Licensed under the <a href="https://github.com/cheton/webappengine/blob/master/LICENSE">MIT License</a>.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/cheton">cheton</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/cheton/webappengine">WebAppEngine</a> is maintained by <a href="https://github.com/cheton">cheton</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+
+    </section>
+
+  
   </body>
 </html>
