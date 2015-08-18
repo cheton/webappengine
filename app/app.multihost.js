@@ -80,7 +80,8 @@ module.exports = function(options) {
                 delete require.cache[server_path];
             }
 
-            if ( ! fs.existsSync(path.resolve(server_path) + '.js')) {
+            if ( ! fs.statSync(path.resolve(server_path) + '.js') &&
+                 ! fs.statSync(path.join(path.resolve(server_path), 'index.js'))) {
                 log.error('The multi-host server does not exist: %j', options);
                 return;
             }
