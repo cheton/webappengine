@@ -4,7 +4,7 @@
 
 A web application platform that can host multiple web apps running with Node.js.
 
-![WebAppEngine](https://github.com/cheton/webappengine/blob/master/media/screenshot.png)
+![WebAppEngine](https://raw.githubusercontent.com/cheton/webappengine/master/media/screenshot.png)
 <i>Note. The administration UI is currently under construction.</i>
 
 ## Installation
