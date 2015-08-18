@@ -17,6 +17,7 @@ Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to ch
 ```bash
 $ webappengine
 ```
+
 To check what port the app is running on, find the message `Server is listening on 0.0.0.0:8000` from console output.
 
 By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on. For example:
@@ -29,7 +30,68 @@ Set the environment variable `NODE_ENV` to `production` if you are running in pr
 $ NODE_ENV=production webappengine
 ```
 
-### Change the display language
+Run `webappengine` with `-h` for detailed usage:
+```
+$ webappengine -h
+
+  Usage: webappengine [options]
+  
+  Options:
+    -h, --help               output usage information
+    -V, --version            output the version number
+    -c, --config [filename]  set multihost configuration file
+                             (default: node_modules/webappengine/app/config/multihost.json)
+```
+
+## Getting Started
+First, checkout [examples/simple/app.js](examples/simple/app.js) and [examples/multihost.json](examples/multihost.json) to kickstart your web application.
+
+app.js:
+```js
+var path = require('path'),
+    express = require('express');
+
+module.exports = function(options) {
+    options = options || {};
+
+    var app = express();
+    var serveStatic = require('serve-static');
+    var assetPath = path.resolve(__dirname, 'web');
+
+    app.enable('case sensitive routing'); // Enable case sensitivity routing: "/Foo" is not equal to "/foo"
+    app.disable('strict routing'); // Disable strict routing: "/foo" and "/foo/" are treated the same
+
+    app.use(options.route, serveStatic(assetPath));
+
+    return app;
+};
+```
+
+multihost.json:
+```json
+[
+    {
+        "route": "/simple",
+        "server": "/path/to/your/simple/app"
+    }
+]
+```
+
+Run `webappengine` with `--config` to set multihost configuration file, like so:
+```bash
+$ webappengine --config "path/to/your/multihost.json"
+```
+
+Visits `http://yourhostname:8000/simple` will return a simple page as below:
+```
+WebAppEngine Test Page
+```
+(See also: [examples/simple/web/index.html](examples/simple/web/index.html))
+
+Otherwise, the default path '/' will route to default path. 
+
+
+## Change the display language
 You can change the display language by specifying the `lang` query string parameter: `?lang={locale}`
 
 Here is a list of currently supported locales:
