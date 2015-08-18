@@ -88,10 +88,8 @@ WebAppEngine Test Page
 ```
 (See also: [examples/simple/web/index.html](examples/simple/web/index.html))
 
-Otherwise, the default path '/' will route to default path. 
-
-
-## Change the display language
+## Internationalization (I18n)
+### Change the display language
 You can change the display language by specifying the `lang` query string parameter: `?lang={locale}`
 
 Here is a list of currently supported locales:
