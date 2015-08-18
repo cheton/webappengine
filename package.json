@@ -1,6 +1,6 @@
 {
   "name": "webappengine",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A web application platform that can host multiple web apps running with Node.js.",
   "homepage": "https://github.com/cheton/webappengine",
   "author": "Cheton Wu <cheton@gmail.com>",
