@@ -1,5 +1,3 @@
-# This repository is under construction!
-
 # WebAppEngine [![build status](https://travis-ci.org/cheton/webappengine.svg?branch=master)](https://travis-ci.org/cheton/webappengine) [![Coverage Status](https://coveralls.io/repos/cheton/webappengine/badge.svg)](https://coveralls.io/r/cheton/webappengine)
 
 [![NPM](https://nodei.co/npm/webappengine.png?downloads=true&stars=true)](https://nodei.co/npm/webappengine/)    
