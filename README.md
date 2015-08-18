@@ -44,9 +44,9 @@ $ webappengine -h
 ```
 
 ## Getting Started
-First, checkout [examples/simple/app.js](examples/simple/app.js) and [examples/multihost.json](examples/multihost.json) to kickstart your web application.
+First, checkout [examples/simple/app.js](examples/simple/app.js) and [examples/multihost.json](examples/multihost.json), and copy [examples](examples) to your project folder to kickstart a web application.
 
-app.js:
+simple/app.js:
 ```js
 var path = require('path'),
     express = require('express');
@@ -72,14 +72,14 @@ multihost.json:
 [
     {
         "route": "/simple",
-        "server": "/path/to/your/simple/app"
+        "server": "/path/to/your/project/simple/app"
     }
 ]
 ```
 
 Run `webappengine` with `--config` to set multihost configuration file, like so:
 ```bash
-$ webappengine --config "path/to/your/multihost.json"
+$ webappengine --config "/path/to/your/project/multihost.json"
 ```
 
 Visits `http://yourhostname:8000/simple` will return a simple page as below:
