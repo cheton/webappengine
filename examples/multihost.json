@@ -4,7 +4,8 @@
         "server": "../examples/simple/app"
     },
     {
+        "type": "static",
         "route": "/",
-        "server": "./app.standalone"
+        "directory": "../examples/static"
     }
 ]

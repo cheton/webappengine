@@ -46,7 +46,19 @@ $ webappengine -h
 
 ## Getting Started
 
-### Configure multihost settings
+### Working with static assets
+The following configuration will serve static assets from the directory:
+```json
+[
+    {
+        "type": "static",
+        "route": "/",
+        "directory": "/path/to/your/project/web/"
+    }
+]
+```
+
+### Configure multihost settings to run multiple web apps
 First, checkout [examples/simple/app.js](examples/simple/app.js) and [examples/multihost.json](examples/multihost.json), and copy [examples](examples) to your project folder to kickstart a web application.
 
 simple/app.js:
