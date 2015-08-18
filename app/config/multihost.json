@@ -1,0 +1,6 @@
+[
+    {
+        "route": "/",
+        "server": "./app.standalone"
+    }
+]
