@@ -29,8 +29,6 @@ module.exports = function(options) {
     // Change route settings in multihost environment
     settings.route = options.route || settings.route;
 
-    console.log(settings.route);
-
     // Main app
     var app = express();
     var errorhandler = require('errorhandler');
