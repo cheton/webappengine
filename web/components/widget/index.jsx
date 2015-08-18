@@ -48,12 +48,6 @@ export class Widget extends React.Component {
         React.unmountComponentAtNode(container);
         container.remove();
     }
-    componentWillUnmount() {
-        console.log('componentWillUnmount');
-    }
-    componentDidUnmount() {
-        console.log('componentDidUnmount');
-    }
     render() {
         let { options } = this.props;
         options = options || {};
