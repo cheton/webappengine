@@ -48,6 +48,8 @@ $ webappengine -h
 
 ### Working with static assets
 The following configuration will serve static assets from the directory:
+
+static-config.json:
 ```json
 [
     {
@@ -57,6 +59,17 @@ The following configuration will serve static assets from the directory:
     }
 ]
 ```
+
+Run `webappengine` with `--config` to set multihost configuration file, like so:
+```bash
+$ webappengine --config "/path/to/your/project/static-config.json"
+```
+
+Visits `http://yourhostname:8000/` will serve `index.html` file as below:
+```
+WebAppEngine Test Page
+```
+(See also: [examples/static/index.html](examples/static/index.html))
 
 ### Configure multihost settings to run multiple web apps
 First, checkout [examples/simple/app.js](examples/simple/app.js) and [examples/multihost.json](examples/multihost.json), and copy [examples](examples) to your project folder to kickstart a web application.
@@ -84,7 +97,7 @@ module.exports = function(options) {
 };
 ```
 
-multihost.json:
+simple-config.json:
 ```json
 [
     {
@@ -96,10 +109,10 @@ multihost.json:
 
 Run `webappengine` with `--config` to set multihost configuration file, like so:
 ```bash
-$ webappengine --config "/path/to/your/project/multihost.json"
+$ webappengine --config "/path/to/your/project/simple-config.json"
 ```
 
-Visits `http://yourhostname:8000/simple` will return a simple page as below:
+Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:
 ```
 WebAppEngine Test Page
 ```
