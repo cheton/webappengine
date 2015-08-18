@@ -69,7 +69,7 @@
     "browserify-shim": "3.8.x",
     "del": "0.1.x",
     "exorcist": "^0.1.6",
-    "gulp": "3.8.x",
+    "gulp": "3.9.x",
     "gulp-autoprefixer": "^2.1.0",
     "gulp-concat": "2.4.x",
     "gulp-csslint": "^0.1.5",
