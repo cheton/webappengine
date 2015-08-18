@@ -44,6 +44,8 @@ $ webappengine -h
 ```
 
 ## Getting Started
+
+### Configure multihost settings
 First, checkout [examples/simple/app.js](examples/simple/app.js) and [examples/multihost.json](examples/multihost.json), and copy [examples](examples) to your project folder to kickstart a web application.
 
 simple/app.js:
