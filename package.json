@@ -50,7 +50,6 @@
     "multiparty": "3.2.x",
     "pkginfo": "0.3.x",
     "request": "^2.53.0",
-    "serialport": "^1.7.4",
     "serve-favicon": "^2.2.0",
     "serve-static": "^1.0.4",
     "sha1": "^1.1.1",
