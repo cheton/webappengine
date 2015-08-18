@@ -2440,7 +2440,7 @@ var Widget4 = (function (_React$Component4) {
         value: function render() {
             var options = {
                 containerClass: 'col-sm-4',
-                title: 'WIDGET 4',
+                title: this.props.title,
                 content: _react2['default'].createElement(
                     'div',
                     null,
@@ -2491,9 +2491,9 @@ var WidgetList = (function (_React$Component5) {
                 _react2['default'].createElement(Widget1, null),
                 _react2['default'].createElement(Widget2, null),
                 _react2['default'].createElement(Widget3, null),
-                _react2['default'].createElement(Widget4, null),
-                _react2['default'].createElement(Widget4, null),
-                _react2['default'].createElement(Widget4, null)
+                _react2['default'].createElement(Widget4, { title: 'widget 5' }),
+                _react2['default'].createElement(Widget4, { title: 'widget 6' }),
+                _react2['default'].createElement(Widget4, { title: 'widget 7' })
             );
         }
     }]);
