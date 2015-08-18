@@ -67,7 +67,8 @@ $ webappengine --config "/path/to/your/project/static-config.json"
 
 Visits `http://yourhostname:8000/` will serve `index.html` file as below:
 ```
-WebAppEngine Test Page
+<h1>WebAppEngine Test Page</h1>
+<h2>examples/static/index.html</h2>
 ```
 (See also: [examples/static/index.html](examples/static/index.html))
 
@@ -114,7 +115,8 @@ $ webappengine --config "/path/to/your/project/simple-config.json"
 
 Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:
 ```
-WebAppEngine Test Page
+<h1>WebAppEngine Test Page</h1>
+<h2>examples/simple/web/index.html</h2>
 ```
 (See also: [examples/simple/web/index.html](examples/simple/web/index.html))
 
