@@ -59,7 +59,7 @@ class Widget4 extends React.Component {
     render() {
         var options = {
             containerClass: 'col-sm-4',
-            title: 'WIDGET 4',
+            title: this.props.title,
             content: (
                 <div>
                     <p>Widget Content</p>
@@ -93,9 +93,9 @@ class WidgetList extends React.Component {
                 <Widget1/>
                 <Widget2/>
                 <Widget3/>
-                <Widget4/>
-                <Widget4/>
-                <Widget4/>
+                <Widget4 title="widget 5"/>
+                <Widget4 title="widget 6"/>
+                <Widget4 title="widget 7"/>
             </div>
         );
     }
