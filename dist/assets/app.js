@@ -2943,16 +2943,6 @@ var Widget = (function (_React$Component4) {
             container.remove();
         }
     }, {
-        key: 'componentWillUnmount',
-        value: function componentWillUnmount() {
-            console.log('componentWillUnmount');
-        }
-    }, {
-        key: 'componentDidUnmount',
-        value: function componentDidUnmount() {
-            console.log('componentDidUnmount');
-        }
-    }, {
         key: 'render',
         value: function render() {
             var options = this.props.options;
