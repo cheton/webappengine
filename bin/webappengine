@@ -1,3 +1,27 @@
 #!/usr/bin/env node
 
+var _ = require('lodash');
+var path = require('path');
+var program = require('commander');
+var pkg = require('../package.json');
+var settings = require('../app/config/settings');
+require('colors');
+
+program
+    .version(pkg.version)
+    .usage('[options]')
+    .option('-c, --config [filename]', 'set multihost configuration file (default: node_modules/webappengine/app/config/multihost.json)')
+    .parse(process.argv);
+
+if (program.config) {
+    var routes = require(path.join(process.cwd(), program.config));
+    if ( ! _.isArray(routes)) {
+        console.log('Check your multihost configuration file to ensure it contain valid routes.'.bold.red);
+        console.log(routes);
+        process.exit(1);
+    } else {
+        settings.multihost.routes = routes;
+    }
+}
+
 require('../app/main');
