@@ -55,6 +55,23 @@ class Widget3 extends React.Component {
     }
 }
 
+class Widget4 extends React.Component {
+    render() {
+        var options = {
+            containerClass: 'col-sm-4',
+            title: 'WIDGET 4',
+            content: (
+                <div>
+                    <p>Widget Content</p>
+                </div>
+            )
+        };
+        return (
+            <Widget options={options}/>
+        );
+    }
+}
+
 class WidgetList extends React.Component {
     constructor(props) {
         super(props);
@@ -76,6 +93,9 @@ class WidgetList extends React.Component {
                 <Widget1/>
                 <Widget2/>
                 <Widget3/>
+                <Widget4/>
+                <Widget4/>
+                <Widget4/>
             </div>
         );
     }
