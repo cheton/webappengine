@@ -58,8 +58,10 @@ module.exports = function(options) {
     var serveStatic = require('serve-static');
     var assetPath = path.resolve(__dirname, 'web');
 
-    app.enable('case sensitive routing'); // Enable case sensitivity routing: "/Foo" is not equal to "/foo"
-    app.disable('strict routing'); // Disable strict routing: "/foo" and "/foo/" are treated the same
+    // Enable case sensitivity routing: "/Foo" is not equal to "/foo"
+    app.enable('case sensitive routing');
+    // Disable strict routing: "/foo" and "/foo/" are treated the same
+    app.disable('strict routing');
 
     app.use(options.route, serveStatic(assetPath));
 
