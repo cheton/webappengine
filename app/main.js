@@ -43,10 +43,8 @@ var createMaster = function(cluster) {
 var createServer = function() {
     var app = require('./app')();
     var server = require('http').createServer(app);
-    var io = require('./socket.io')(server);
 
     server.setMaxListeners(0); // Set to zero for unlimited
-    io.setMaxListeners(0); // Set to zero for unlimited
 
     server.listen(settings.port, function() {
         // Lower the process privileges by setting the UID and GUID after the process has mound to the port.
@@ -58,16 +56,6 @@ var createServer = function() {
         }
         var address = server.address();
         console.log('Server is listening on %s:%d', address.address, address.port);
-    });
-
-    io.sockets.on('connection', function(socket) {
-        socket.on('message', function(msg) {
-            console.log('Received a message: %s', msg);
-            socket.emit('message', { 'status': 'ok' });
-        });
-        socket.on('disconnect', function() {
-            console.log('Disconnected');
-        });
     });
 };
 
