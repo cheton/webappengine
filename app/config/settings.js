@@ -33,13 +33,8 @@ var settings = { // Default settings
         uri: ''
     },
     multihost: {
-        enable: true, // default is false
-        routes: [
-            { // path prefix is '/'
-                'route': '/',
-                'server': './app.standalone'
-            }
-        ]
+        enable: true,
+        routes: require('./multihost.json')
     },
     assets: {
         // web
