@@ -38,9 +38,13 @@ $ webappengine -h
   Usage: webappengine [options]
   
   Options:
+
     -h, --help               output usage information
     -V, --version            output the version number
-    -c, --config [filename]  set multihost configuration file
+    -p, --port               set listen port (default: 8000)
+    -l, --host               set listen address (default: 0.0.0.0)
+    -b, --backlog            set listen backlog (default: 511)
+    -c, --config <filename>  set multihost configuration file
                              (default: node_modules/webappengine/app/config/multihost.json)
 ```
 
