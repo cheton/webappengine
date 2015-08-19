@@ -1,5 +1,6 @@
 [
     {
+        "type": "server",
         "route": "/simple",
         "server": "../examples/simple/app"
     },
