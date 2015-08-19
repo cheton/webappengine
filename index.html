@@ -121,10 +121,11 @@
     <span class="pl-k">return</span> app;
 };</pre></div>
 
-<p>simple-config.json:</p>
+<p>server-config.json:</p>
 
 <div class="highlight highlight-json"><pre>[
     {
+        <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>server<span class="pl-pds">"</span></span>,
         <span class="pl-s"><span class="pl-pds">"</span>route<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/simple<span class="pl-pds">"</span></span>,
         <span class="pl-s"><span class="pl-pds">"</span>server<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/simple/app<span class="pl-pds">"</span></span>
     }
@@ -132,7 +133,7 @@
 
 <p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file, like so:</p>
 
-<div class="highlight highlight-bash"><pre>$ webappengine --config <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/simple-config.json<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-bash"><pre>$ webappengine --config <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/server-config.json<span class="pl-pds">"</span></span></pre></div>
 
 <p>Visits <code>http://yourhostname:8000/simple</code> will serve <code>index.html</code> file as below:</p>
 
