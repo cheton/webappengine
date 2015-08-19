@@ -170,7 +170,7 @@ Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:
 ```
 (See also: [examples/simple/web/index.html](examples/simple/web/index.html))
 
-## Internationalization (I18n)
+## Administration UI
 ### Change the display language
 You can change the display language by specifying the `lang` query string parameter: `?lang={locale}`
 
