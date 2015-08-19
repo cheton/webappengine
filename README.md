@@ -101,6 +101,7 @@ simple-config.json:
 ```json
 [
     {
+        "type": "server",
         "route": "/simple",
         "server": "/path/to/your/project/simple/app"
     }
