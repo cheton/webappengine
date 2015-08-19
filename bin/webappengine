@@ -10,9 +10,18 @@ require('colors');
 program
     .version(pkg.version)
     .usage('[options]')
-    .option('-c, --config [filename]', 'set multihost configuration file (default: node_modules/webappengine/app/config/multihost.json)')
+    .option('-p, --port <port>', 'set listen port (default: 8000)')
+    .option('-H, --host <host>', 'set listen address or hostname (default: 0.0.0.0)')
+    .option('-b, --backlog <backlog>', 'set listen backlog (default: 511)')
+    .option('-c, --config <filename>', 'set multihost configuration file (default: node_modules/webappengine/app/config/multihost.json)')
     .parse(process.argv);
 
+// Overrides defaults
+_.set(settings, 'port', program.port || settings.port);
+_.set(settings, 'host', program.host || settings.host);
+_.set(settings, 'backlog', program.backlog || settings.backlog);
+
+// Set multihost configuration settings
 if (program.config) {
     var routes = require(path.join(process.cwd(), program.config));
     if ( ! _.isArray(routes)) {
@@ -20,7 +29,7 @@ if (program.config) {
         console.log(routes);
         process.exit(1);
     } else {
-        settings.multihost.routes = routes;
+        _.set(settings, 'multihost.routes', routes || settings.multihost.routes);
     }
 }
 

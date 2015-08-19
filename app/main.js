@@ -46,7 +46,7 @@ var createServer = function() {
 
     server.setMaxListeners(0); // Set to zero for unlimited
 
-    server.listen(settings.port, function() {
+    server.listen(settings.port, settings.host, settings.backlog, function() {
         // Lower the process privileges by setting the UID and GUID after the process has mound to the port.
         if (settings.uid) {
             process.setuid(settings.uid);

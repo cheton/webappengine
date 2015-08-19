@@ -8,11 +8,38 @@ A web application platform that can host multiple web apps running with Node.js.
 <i>Note. The administration UI is currently under construction.</i>
 
 ## Installation
+For the API usage:
+```bash
+$ npm install --save webappengine
+```
+
+For the command line usage:
 ```bash
 $ npm install -g webappengine
 ```
 
 ## Usage
+
+### API usage
+```js
+var webappengine = require('webappengine');
+var options = {
+    port: 80, // [optional] The listen port (default: 8000)
+    //host: '', // [optional] The listen address or hostname (default: 0.0.0.0)
+    //backlog: 511, // [optional] The listen backlog (default: 511)
+    routes: [
+        {
+            type: 'static',
+            route: '/',
+            directory: '/path/to/your/project/web'
+        }
+    ]
+};
+
+webappengine(options);
+```
+
+### Command line usage
 Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works:
 
 ```bash
@@ -21,9 +48,9 @@ $ webappengine
 
 To check what port the app is running on, find the message `Server is listening on 0.0.0.0:8000` from console output.
 
-By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on. For example:
+By default the app listens on port 8000, you can run `webappengine` with `-p` (or `--port`) to determine which port your application should listen on. For example:
 ```bash
-$ PORT=80 webappengine
+$ webappengine -p 80
 ```
 
 Set the environment variable `NODE_ENV` to `production` if you are running in production mode:
@@ -38,9 +65,13 @@ $ webappengine -h
   Usage: webappengine [options]
   
   Options:
+
     -h, --help               output usage information
     -V, --version            output the version number
-    -c, --config [filename]  set multihost configuration file
+    -p, --port               set listen port (default: 8000)
+    -l, --host               set listen address or hostname (default: 0.0.0.0)
+    -b, --backlog            set listen backlog (default: 511)
+    -c, --config <filename>  set multihost configuration file
                              (default: node_modules/webappengine/app/config/multihost.json)
 ```
 
@@ -60,9 +91,19 @@ static-config.json:
 ]
 ```
 
-Run `webappengine` with `--config` to set multihost configuration file, like so:
+Run `webappengine` with `--config` to set multihost configuration file:
 ```bash
 $ webappengine --config "/path/to/your/project/static-config.json"
+```
+
+or use the API:
+```js
+var webappengine = require('webappengine');
+var routes = require('/path/to/your/project/static-config.json');
+
+webappengine({
+    routes: routes
+});
 ```
 
 Visits `http://yourhostname:8000/` will serve `index.html` file as below:
@@ -108,9 +149,19 @@ server-config.json:
 ]
 ```
 
-Run `webappengine` with `--config` to set multihost configuration file, like so:
+Run `webappengine` with `--config` to set multihost configuration file:
 ```bash
 $ webappengine --config "/path/to/your/project/server-config.json"
+```
+
+or use the API:
+```js
+var webappengine = require('webappengine');
+var routes = require('/path/to/your/project/server-config.json');
+
+webappengine({
+    routes: routes
+});
 ```
 
 Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:

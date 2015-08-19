@@ -26,14 +26,17 @@ var settings = { // Default settings
     version: pkg.version,
     // hashed version
     hashed_version: hashed_version,
-    // Web
+
+    // for server.listen(port[, host][, backlog][, callback])
+    // host and backlog are omitted by default
     port: process.env.PORT || 8000,
+
     route: '/', // with trailing slash
     cdn: {
         uri: ''
     },
     multihost: {
-        enable: true,
+        enable: true, // default: true
         routes: require('./multihost.json')
     },
     assets: {
@@ -123,9 +126,6 @@ var settings = { // Default settings
             // response is only compressed if the byte size is at or above this threshold.
             threshold: 512
         }
-    },
-    'socket.io': {
-        redis: false
     },
     // Supported languages
     supportedLngs: [
