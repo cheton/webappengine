@@ -18,6 +18,16 @@ For the command line usage:
 $ npm install -g webappengine
 ```
 
+### Generator
+A Yeoman generator for WebAppEngine is available at [https://github.com/cheton/generator-webappengine](https://github.com/cheton/generator-webappengine).
+
+Follow the steps to run the generator:
+```bash
+$ npm install -g yo
+$ npm install -g generator-webappengine
+$ yo webappengine
+```
+
 ## Usage
 
 ### API usage
