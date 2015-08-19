@@ -8,11 +8,17 @@ A web application platform that can host multiple web apps running with Node.js.
 <i>Note. The administration UI is currently under construction.</i>
 
 ## Installation
+For the command line usage:
 ```bash
 $ npm install -g webappengine
 ```
+For the API usage:
+```bash
+$ npm install --save webappengine
+```
 
 ## Usage
+### Command line usage
 Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works:
 
 ```bash
@@ -21,9 +27,9 @@ $ webappengine
 
 To check what port the app is running on, find the message `Server is listening on 0.0.0.0:8000` from console output.
 
-By default the app listens on port 8000, you can use the `PORT` environment variable to determine which port your application should listen on. For example:
+By default the app listens on port 8000, you can run `webappengine` with `-p` (or `--port`) to determine which port your application should listen on. For example:
 ```bash
-$ PORT=80 webappengine
+$ webappengine -p 80
 ```
 
 Set the environment variable `NODE_ENV` to `production` if you are running in production mode:
@@ -42,10 +48,28 @@ $ webappengine -h
     -h, --help               output usage information
     -V, --version            output the version number
     -p, --port               set listen port (default: 8000)
-    -l, --host               set listen address (default: 0.0.0.0)
+    -l, --host               set listen address or hostname (default: 0.0.0.0)
     -b, --backlog            set listen backlog (default: 511)
     -c, --config <filename>  set multihost configuration file
                              (default: node_modules/webappengine/app/config/multihost.json)
+```
+### API usage
+```js
+var webappengine = require('webappengine');
+var options = {
+    port: 80, // [optional] The listen port (default: 8000)
+    //host: '', // [optional] The listen address or hostname (default: 0.0.0.0)
+    //backlog: 511, // [optional] The listen backlog (default: 511)
+    routes: [
+        {
+            type: 'static',
+            route: '/',
+            directory: '/path/to/your/project/web'
+        }
+    ]
+};
+
+webappengine(options);
 ```
 
 ## Getting Started
