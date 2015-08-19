@@ -97,7 +97,7 @@ module.exports = function(options) {
 };
 ```
 
-simple-config.json:
+server-config.json:
 ```json
 [
     {
@@ -110,7 +110,7 @@ simple-config.json:
 
 Run `webappengine` with `--config` to set multihost configuration file, like so:
 ```bash
-$ webappengine --config "/path/to/your/project/simple-config.json"
+$ webappengine --config "/path/to/your/project/server-config.json"
 ```
 
 Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:
