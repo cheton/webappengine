@@ -171,8 +171,11 @@ Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:
 (See also: [examples/simple/web/index.html](examples/simple/web/index.html))
 
 ## Administration UI
+<i>The administration UI is currently under construction.</i>
+### Dashboard
+TBD
 ### Change the display language
-You can change the display language by specifying the `lang` query string parameter: `?lang={locale}`
+You can change the display language from the <b>Settings</b> menu, it will set the `lang` query string parameter: `?lang={locale}`
 
 Here is a list of currently supported locales:
 
