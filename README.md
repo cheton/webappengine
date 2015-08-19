@@ -99,7 +99,7 @@ $ webappengine --config "/path/to/your/project/static-config.json"
 or use the API:
 ```js
 var webappengine = require('webappengine');
-var routes = require('/path/to/your/project/static-config.json');
+var routes = require('./static-config.json');
 
 webappengine({
     routes: routes
@@ -157,7 +157,7 @@ $ webappengine --config "/path/to/your/project/server-config.json"
 or use the API:
 ```js
 var webappengine = require('webappengine');
-var routes = require('/path/to/your/project/server-config.json');
+var routes = require('./server-config.json');
 
 webappengine({
     routes: routes
