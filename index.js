@@ -5,7 +5,7 @@ var settings = require('./app/config/settings');
  * Overrides default settings and loads app/main.js
  * @param {object} [options] The options object
  * @param {number} [options.port] The listen port (default: 8000)
- * @param {string} [options.host] The listen address/hostname (default: 0.0.0.0)
+ * @param {string} [options.host] The listen address or hostname (default: 0.0.0.0)
  * @param {number} [options.backlog] The listen backlog (default: 511)
  * @param {array} [options.routes] An array containing the route settings
  */

@@ -11,7 +11,7 @@ program
     .version(pkg.version)
     .usage('[options]')
     .option('-p, --port <port>', 'set listen port (default: 8000)')
-    .option('-H, --host <hostname|address>', 'set listen host (default: 0.0.0.0)')
+    .option('-H, --host <host>', 'set listen address or hostname (default: 0.0.0.0)')
     .option('-b, --backlog <backlog>', 'set listen backlog (default: 511)')
     .option('-c, --config <filename>', 'set multihost configuration file (default: node_modules/webappengine/app/config/multihost.json)')
     .parse(process.argv);
