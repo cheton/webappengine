@@ -33,10 +33,38 @@
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
+<p>For the API usage:</p>
+
+<div class="highlight highlight-bash"><pre>$ npm install --save webappengine</pre></div>
+
+<p>For the command line usage:</p>
+
 <div class="highlight highlight-bash"><pre>$ npm install -g webappengine</pre></div>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="api-usage" class="anchor" href="#api-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>API usage</h3>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> webappengine <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>webappengine<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> options <span class="pl-k">=</span> {
+    port<span class="pl-k">:</span> <span class="pl-c1">80</span>, <span class="pl-c">// [optional] The listen port (default: 8000)</span>
+    <span class="pl-c">//host: '', // [optional] The listen address or hostname (default: 0.0.0.0)</span>
+    <span class="pl-c">//backlog: 511, // [optional] The listen backlog (default: 511)</span>
+    routes<span class="pl-k">:</span> [
+        {
+            type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>static<span class="pl-pds">'</span></span>,
+            route<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>,
+            directory<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/path/to/your/project/web<span class="pl-pds">'</span></span>
+        }
+    ]
+};
+
+<span class="pl-c1">webappengine</span>(options);</pre></div>
+
+<h3>
+<a id="command-line-usage" class="anchor" href="#command-line-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command line usage</h3>
 
 <p>Run <code>webappengine</code> to start the app, and visit <code>http://yourhostname:8000/</code> to check if it works:</p>
 
@@ -44,9 +72,9 @@
 
 <p>To check what port the app is running on, find the message <code>Server is listening on 0.0.0.0:8000</code> from console output.</p>
 
-<p>By default the app listens on port 8000, you can use the <code>PORT</code> environment variable to determine which port your application should listen on. For example:</p>
+<p>By default the app listens on port 8000, you can run <code>webappengine</code> with <code>-p</code> (or <code>--port</code>) to determine which port your application should listen on. For example:</p>
 
-<div class="highlight highlight-bash"><pre>$ PORT=80 webappengine</pre></div>
+<div class="highlight highlight-bash"><pre>$ webappengine -p 80</pre></div>
 
 <p>Set the environment variable <code>NODE_ENV</code> to <code>production</code> if you are running in production mode:</p>
 
@@ -59,9 +87,13 @@
   Usage: webappengine [options]
 
   Options:
+
     -h, --help               output usage information
     -V, --version            output the version number
-    -c, --config [filename]  set multihost configuration file
+    -p, --port               set listen port (default: 8000)
+    -l, --host               set listen address or hostname (default: 0.0.0.0)
+    -b, --backlog            set listen backlog (default: 511)
+    -c, --config &lt;filename&gt;  set multihost configuration file
                              (default: node_modules/webappengine/app/config/multihost.json)
 </code></pre>
 
@@ -83,9 +115,18 @@
     }
 ]</pre></div>
 
-<p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file, like so:</p>
+<p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file:</p>
 
 <div class="highlight highlight-bash"><pre>$ webappengine --config <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/static-config.json<span class="pl-pds">"</span></span></pre></div>
+
+<p>or use the API:</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> webappengine <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>webappengine<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> routes <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>./static-config.json<span class="pl-pds">'</span></span>);
+
+<span class="pl-c1">webappengine</span>({
+    routes<span class="pl-k">:</span> routes
+});</pre></div>
 
 <p>Visits <code>http://yourhostname:8000/</code> will serve <code>index.html</code> file as below:</p>
 
@@ -131,9 +172,18 @@
     }
 ]</pre></div>
 
-<p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file, like so:</p>
+<p>Run <code>webappengine</code> with <code>--config</code> to set multihost configuration file:</p>
 
 <div class="highlight highlight-bash"><pre>$ webappengine --config <span class="pl-s"><span class="pl-pds">"</span>/path/to/your/project/server-config.json<span class="pl-pds">"</span></span></pre></div>
+
+<p>or use the API:</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> webappengine <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>webappengine<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> routes <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>./server-config.json<span class="pl-pds">'</span></span>);
+
+<span class="pl-c1">webappengine</span>({
+    routes<span class="pl-k">:</span> routes
+});</pre></div>
 
 <p>Visits <code>http://yourhostname:8000/simple</code> will serve <code>index.html</code> file as below:</p>
 
