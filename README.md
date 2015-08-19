@@ -8,16 +8,37 @@ A web application platform that can host multiple web apps running with Node.js.
 <i>Note. The administration UI is currently under construction.</i>
 
 ## Installation
-For the command line usage:
-```bash
-$ npm install -g webappengine
-```
 For the API usage:
 ```bash
 $ npm install --save webappengine
 ```
 
+For the command line usage:
+```bash
+$ npm install -g webappengine
+```
+
 ## Usage
+
+### API usage
+```js
+var webappengine = require('webappengine');
+var options = {
+    port: 80, // [optional] The listen port (default: 8000)
+    //host: '', // [optional] The listen address or hostname (default: 0.0.0.0)
+    //backlog: 511, // [optional] The listen backlog (default: 511)
+    routes: [
+        {
+            type: 'static',
+            route: '/',
+            directory: '/path/to/your/project/web'
+        }
+    ]
+};
+
+webappengine(options);
+```
+
 ### Command line usage
 Run `webappengine` to start the app, and visit `http://yourhostname:8000/` to check if it works:
 
@@ -52,24 +73,6 @@ $ webappengine -h
     -b, --backlog            set listen backlog (default: 511)
     -c, --config <filename>  set multihost configuration file
                              (default: node_modules/webappengine/app/config/multihost.json)
-```
-### API usage
-```js
-var webappengine = require('webappengine');
-var options = {
-    port: 80, // [optional] The listen port (default: 8000)
-    //host: '', // [optional] The listen address or hostname (default: 0.0.0.0)
-    //backlog: 511, // [optional] The listen backlog (default: 511)
-    routes: [
-        {
-            type: 'static',
-            route: '/',
-            directory: '/path/to/your/project/web'
-        }
-    ]
-};
-
-webappengine(options);
 ```
 
 ## Getting Started
