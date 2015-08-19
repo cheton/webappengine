@@ -19,7 +19,7 @@ $ npm install -g webappengine
 ```
 
 ### Generator
-A Yeoman generator for WebAppEngine is available at [https://github.com/cheton/generator-webappengine](https://github.com/cheton/generator-webappengine).
+A Yeoman generator for WebAppEngine is available at [https://github.com/cheton/generator-webappengine](https://github.com/cheton/generator-webappengine). You can use the generator to kick-start your web app.
 
 Follow the steps to run the generator:
 ```bash
