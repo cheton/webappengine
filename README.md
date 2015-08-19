@@ -91,9 +91,19 @@ static-config.json:
 ]
 ```
 
-Run `webappengine` with `--config` to set multihost configuration file, like so:
+Run `webappengine` with `--config` to set multihost configuration file:
 ```bash
 $ webappengine --config "/path/to/your/project/static-config.json"
+```
+
+or use the API:
+```js
+var webappengine = require('webappengine');
+var routes = require('/path/to/your/project/static-config.json');
+
+webappengine({
+    routes: routes
+});
 ```
 
 Visits `http://yourhostname:8000/` will serve `index.html` file as below:
@@ -139,9 +149,19 @@ server-config.json:
 ]
 ```
 
-Run `webappengine` with `--config` to set multihost configuration file, like so:
+Run `webappengine` with `--config` to set multihost configuration file:
 ```bash
 $ webappengine --config "/path/to/your/project/server-config.json"
+```
+
+or use the API:
+```js
+var webappengine = require('webappengine');
+var routes = require('/path/to/your/project/server-config.json');
+
+webappengine({
+    routes: routes
+});
 ```
 
 Visits `http://yourhostname:8000/simple` will serve `index.html` file as below:
