@@ -61,9 +61,10 @@ var options = {
     //backlog: 511, // [optional] The listen backlog (default: 511)
     routes: [
         {
-            type: 'static',
+            type: 'static', // [static|server]
             route: '/',
-            directory: '/path/to/your/project/web'
+            //server: '/path/to/your/project/app/app', // for the server type
+            directory: '/path/to/your/project/web' // for the static type
         }
     ]
 };
