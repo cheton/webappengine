@@ -38,13 +38,15 @@ $ gulp
 Now you can run `node app/main.js` to launch your web app, or use webappengine to load [app.js](https://github.com/cheton/generator-webappengine/blob/master/generators/app/templates/app/app.js). For example:
 ```js
 var webappengine = require('webappengine');
+var path = require('path');
 webappengine({
     port: 80,
     routes: [
         {
             type: 'server',
             route: '/',
-            server: '/path/to/your/project/app/app'
+            // An absolute path is recommended to use
+            server: path.resolve(__dirname, 'app/app')
         }
     ]
 });
@@ -55,6 +57,7 @@ webappengine({
 ### API usage
 ```js
 var webappengine = require('webappengine');
+var path = require('path');
 var options = {
     port: 80, // [optional] The listen port (default: 8000)
     //host: '', // [optional] The listen address or hostname (default: 0.0.0.0)
@@ -63,8 +66,8 @@ var options = {
         {
             type: 'static', // [static|server]
             route: '/',
-            //server: '/path/to/your/project/app/app', // for the server type
-            directory: '/path/to/your/project/web' // for the static type
+            //server: path.resolve(__dirname, 'app/app'), // for the server type
+            directory: path.resolve(__dirname, 'web') // for the static type
         }
     ]
 };
@@ -105,7 +108,6 @@ $ webappengine -h
     -l, --host               set listen address or hostname (default: 0.0.0.0)
     -b, --backlog            set listen backlog (default: 511)
     -c, --config <filename>  set multihost configuration file
-                             (default: node_modules/webappengine/app/config/multihost.json)
 ```
 
 ## Getting Started

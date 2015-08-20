@@ -37,7 +37,13 @@ var settings = { // Default settings
     },
     multihost: {
         enable: true, // default: true
-        routes: require('./multihost.json')
+        routes: [
+            {
+                type: 'server',
+                route: '/',
+                server: path.resolve(__dirname, '..', 'app.standalone')
+            }
+        ]
     },
     assets: {
         // web
