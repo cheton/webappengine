@@ -21,9 +21,7 @@ fs.readdirSync(__dirname + '/lib/middleware').forEach(function(filename) {
     middleware[name] = require('./lib/middleware/' + name);
 });
 
-module.exports = function(options) {
-    options = options || {};
-
+module.exports = function() {
     // Main app
     var app = express();
     var errorhandler = require('errorhandler');
