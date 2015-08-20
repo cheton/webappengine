@@ -44,7 +44,7 @@ webappengine({
         {
             type: 'server',
             route: '/',
-            directory: '/path/to/your/project/app/app'
+            server: '/path/to/your/project/app/app'
         }
     ]
 });
