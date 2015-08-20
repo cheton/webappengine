@@ -2,11 +2,11 @@
     {
         "type": "server",
         "route": "/simple",
-        "server": "../examples/simple/app"
+        "server": "/path/to/your/project/examples/simple/app"
     },
     {
         "type": "static",
         "route": "/",
-        "directory": "../examples/static"
+        "directory": "/path/to/your/project/examples/static"
     }
 ]
