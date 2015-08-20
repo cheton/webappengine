@@ -23,7 +23,7 @@ _.set(settings, 'backlog', program.backlog || settings.backlog);
 
 // Set multihost configuration settings
 if (program.config) {
-    var routes = require(path.join(process.cwd(), program.config));
+    var routes = require(path.resolve(program.config));
     if ( ! _.isArray(routes)) {
         console.log('Check your multihost configuration file to ensure it contain valid routes.'.bold.red);
         console.log(routes);
