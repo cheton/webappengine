@@ -74,20 +74,21 @@ module.exports = function() {
         _.each(settings.multihost.routes, function(options) {
             if (options.type === 'static') {
                 // Serve static assets
-                app.use(options.route, serveStatic(options.directory));
+                app.use(options.route, serveStatic(path.resolve(options.directory)));
                 log.info('Served a static directory:', JSON.stringify(options, null, 4));
                 return;
             }
 
             // Modules are cached after the first time they are loaded.
             // The cached module must be invalidated to ensure data-independences in a multi-host environment.
-            var server_path = options.server;
+            var server_path = path.resolve(options.server);
             if (require.cache[server_path]) {
                 delete require.cache[server_path];
             }
 
-            if ( ! fs.statSync(path.resolve(server_path) + '.js') &&
-                 ! fs.statSync(path.join(path.resolve(server_path), 'index.js'))) {
+            if ( ! fs.statSync(server_path) &&
+                 ! fs.statSync(server_path + '.js') &&
+                 ! fs.statSync(path.join(server_path, 'index.js'))) {
                 log.error('The multi-host server does not exist:', JSON.stringify(options, null, 4));
                 return;
             }
@@ -96,7 +97,9 @@ module.exports = function() {
             app.use(middleware.multihost({
                 hosts: options.hosts,
                 route: options.route,
-                server: server({ route: options.route })
+                server: server({
+                    route: options.route
+                })
             }));
 
             log.info('Attached a multi-host server:', JSON.stringify(options, null, 4));
