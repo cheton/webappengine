@@ -79,28 +79,30 @@ module.exports = function() {
                 return;
             }
 
-            // Modules are cached after the first time they are loaded.
-            // The cached module must be invalidated to ensure data-independences in a multi-host environment.
-            var server_path = path.resolve(options.server);
-            if (require.cache[server_path]) {
-                delete require.cache[server_path];
-            }
+            try {
+                // Modules are cached after the first time they are loaded.
+                // The cached module must be invalidated to ensure data-independences in a multi-host environment.
+                var server_path = path.resolve(options.server);
+                if (require.cache[server_path]) {
+                    delete require.cache[server_path];
+                }
 
-            if ( ! fs.statSync(server_path) &&
-                 ! fs.statSync(server_path + '.js') &&
-                 ! fs.statSync(path.join(server_path, 'index.js'))) {
+                var server = require(server_path);
+
+                app.use(middleware.multihost({
+                    hosts: options.hosts,
+                    route: options.route,
+                    server: server({
+                        route: options.route
+                    })
+                }));
+            }
+            catch (e) {
+                log.error(e);
                 log.error('The multi-host server does not exist:', JSON.stringify(options, null, 4));
                 return;
             }
 
-            var server = require(server_path);
-            app.use(middleware.multihost({
-                hosts: options.hosts,
-                route: options.route,
-                server: server({
-                    route: options.route
-                })
-            }));
 
             log.info('Attached a multi-host server:', JSON.stringify(options, null, 4));
         });
