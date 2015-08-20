@@ -1,6 +1,6 @@
 {
   "name": "webappengine",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A web application platform that can host multiple web apps running with Node.js.",
   "homepage": "https://github.com/cheton/webappengine",
   "author": "Cheton Wu <cheton@gmail.com>",
@@ -62,7 +62,6 @@
     "amd-optimize": "0.3.x",
     "babelify": "^6.1.3",
     "brfs": "1.2.x",
-    "browser-sync": "^2.2.2",
     "browserify": "9.0.x",
     "browserify-css": "0.6.x",
     "browserify-shim": "3.8.x",
