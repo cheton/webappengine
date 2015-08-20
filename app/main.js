@@ -1,6 +1,3 @@
-// Change the current working directory to ensure that files are relative to the current directory.
-process.chdir(__dirname);
-
 // Module dependencies
 var cluster = require('cluster');
 require('colors');
