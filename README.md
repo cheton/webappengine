@@ -19,7 +19,7 @@ $ npm install -g webappengine
 ```
 
 ### Kickstart your project using [generator-webappengine](https://github.com/cheton/generator-webappengine)
-A Yeoman generator for developing WebAppEngine app is available at [https://github.com/cheton/generator-webappengine](https://github.com/cheton/generator-webappengine). You can use the generator to kickstart your project. It includes Gulp, Browserify, Babelify, Stylus, and React.
+A Yeoman generator for developing WebAppEngine app is available at [https://github.com/cheton/generator-webappengine](https://github.com/cheton/generator-webappengine). You can use the generator to kickstart your project. It includes Gulp, Browserify, Babelify, Stylus, Handlebars, i18next, and React.
 
 Follow the steps to run the generator:
 ```bash
@@ -35,7 +35,16 @@ $ bower install
 $ gulp
 ```
 
-Now you can run `node app/main.js` to launch your web app.
+Now you can run `node app/main.js` to launch your web app, or use webappengine to load [app.js](https://github.com/cheton/generator-webappengine/blob/master/generators/app/templates/app/app.js). For example:
+```json
+[
+    {
+        "type": "server",
+        "route": "/",
+        "server": "/path/to/your/project/app/app"
+    }
+]
+```
 
 ## Usage
 
