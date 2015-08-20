@@ -62,13 +62,15 @@ $ gulp</pre></div>
 <p>Now you can run <code>node app/main.js</code> to launch your web app, or use webappengine to load <a href="https://github.com/cheton/generator-webappengine/blob/master/generators/app/templates/app/app.js">app.js</a>. For example:</p>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> webappengine <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>webappengine<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> path <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>path<span class="pl-pds">'</span></span>);
 <span class="pl-c1">webappengine</span>({
     port<span class="pl-k">:</span> <span class="pl-c1">80</span>,
     routes<span class="pl-k">:</span> [
         {
             type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>server<span class="pl-pds">'</span></span>,
             route<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>,
-            server<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/path/to/your/project/app/app<span class="pl-pds">'</span></span>
+            <span class="pl-c">// An absolute path is recommended to use</span>
+            server<span class="pl-k">:</span> path.<span class="pl-c1">resolve</span>(<span class="pl-c1">__dirname</span>, <span class="pl-s"><span class="pl-pds">'</span>app/app<span class="pl-pds">'</span></span>)
         }
     ]
 });</pre></div>
@@ -80,15 +82,17 @@ $ gulp</pre></div>
 <a id="api-usage" class="anchor" href="#api-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>API usage</h3>
 
 <div class="highlight highlight-js"><pre><span class="pl-k">var</span> webappengine <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>webappengine<span class="pl-pds">'</span></span>);
+<span class="pl-k">var</span> path <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>path<span class="pl-pds">'</span></span>);
 <span class="pl-k">var</span> options <span class="pl-k">=</span> {
     port<span class="pl-k">:</span> <span class="pl-c1">80</span>, <span class="pl-c">// [optional] The listen port (default: 8000)</span>
     <span class="pl-c">//host: '', // [optional] The listen address or hostname (default: 0.0.0.0)</span>
     <span class="pl-c">//backlog: 511, // [optional] The listen backlog (default: 511)</span>
     routes<span class="pl-k">:</span> [
         {
-            type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>static<span class="pl-pds">'</span></span>,
+            type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>static<span class="pl-pds">'</span></span>, <span class="pl-c">// [static|server]</span>
             route<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/<span class="pl-pds">'</span></span>,
-            directory<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>/path/to/your/project/web<span class="pl-pds">'</span></span>
+            <span class="pl-c">//server: path.resolve(__dirname, 'app/app'), // for the server type</span>
+            directory<span class="pl-k">:</span> path.<span class="pl-c1">resolve</span>(<span class="pl-c1">__dirname</span>, <span class="pl-s"><span class="pl-pds">'</span>web<span class="pl-pds">'</span></span>) <span class="pl-c">// for the static type</span>
         }
     ]
 };
@@ -126,7 +130,6 @@ $ gulp</pre></div>
     -l, --host               set listen address or hostname (default: 0.0.0.0)
     -b, --backlog            set listen backlog (default: 511)
     -c, --config &lt;filename&gt;  set multihost configuration file
-                             (default: node_modules/webappengine/app/config/multihost.json)
 </code></pre>
 
 <h2>
