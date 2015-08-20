@@ -18,7 +18,7 @@ For the command line usage:
 $ npm install -g webappengine
 ```
 
-### Using a generator to kickstart your project
+### Kickstart your project using [generator-webappengine](https://github.com/cheton/generator-webappengine)
 A Yeoman generator for developing WebAppEngine app is available at [https://github.com/cheton/generator-webappengine](https://github.com/cheton/generator-webappengine). You can use the generator to kickstart your project. It includes Gulp, Browserify, Babelify, Stylus, and React.
 
 Follow the steps to run the generator:
