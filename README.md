@@ -229,4 +229,9 @@ zh-tw  | 中文 (繁體)
 
 Copyright (c) 2015 Cheton Wu
 
-Licensed under the [MIT License](https://github.com/cheton/webappengine/blob/master/LICENSE).
+Licensed under the [MIT License](
+## License
+
+Copyright (c) 2015 Cheton Wu
+
+Licensed under the [MIT License](LICENSE).
