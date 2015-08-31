@@ -33,4 +33,4 @@ if (program.config) {
     }
 }
 
-require('../app/main');
+require('../app/main')();
