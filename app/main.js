@@ -54,33 +54,51 @@ var createServer = function() {
         var address = server.address();
         console.log('Server is listening on %s:%d', address.address, address.port);
     });
+
+    return server;
 };
 
-if (settings.cluster.enable) {
-    if (cluster.isMaster) { // True if the process is a master. 
-        createMaster(cluster);
+module.exports = function() {
+    var server;
 
-        // Event: message
-        Object.keys(cluster.workers).forEach(function(id) {
-            cluster.workers[id].on('message', function(msg) {
-                if (msg.cmd === 'bonjour') {
-                    console.log('Received a bonjour command from worker #%d(pid=%d)', this.id, this.process.pid);
-                    this.send({reply: 'ok'});
-                }
+    if (settings.cluster.enable) {
+        if (cluster.isMaster) { // True if the process is a master. 
+            createMaster(cluster);
+
+            // Event: message
+            Object.keys(cluster.workers).forEach(function(id) {
+                cluster.workers[id].on('message', function(msg) {
+                    if (msg.cmd === 'bonjour') {
+                        console.log('Received a bonjour command from worker #%d(pid=%d)', this.id, this.process.pid);
+                        this.send({reply: 'ok'});
+                    }
+                });
             });
-        });
 
-    } else if (cluster.isWorker) { // True if the process is not a master (it is the negation of cluster.isMaster).
-        createServer();
+        } else if (cluster.isWorker) { // True if the process is not a master (it is the negation of cluster.isMaster).
+            server = createServer();
 
-        // Event: message
-        process.send({cmd: 'bonjour'});
-        process.on('message', function(msg) {
-            console.log('Received a bonjour reply from master: %s', JSON.stringify(msg));
-        });
+            // Event: message
+            process.send({cmd: 'bonjour'});
+            process.on('message', function(msg) {
+                console.log('Received a bonjour reply from master: %s', JSON.stringify(msg));
+            });
+        }
+    } else {
+        // Debugging Clustered Apps with Node-Inspector
+        // http://strongloop.com/strongblog/whats-new-nodejs-v0-12-debugging-clusters/
+        server = createServer();
     }
-} else {
-    // Debugging Clustered Apps with Node-Inspector
-    // http://strongloop.com/strongblog/whats-new-nodejs-v0-12-debugging-clusters/
-    createServer();
-}
+
+    var Wrapper = function(server) {
+        this.server = server;
+    };
+    Wrapper.prototype.on = function(evt, callback) {
+        if (evt === 'ready') {
+            callback(this.server);
+        }
+        return this;
+    };
+
+    return new Wrapper(server);
+};

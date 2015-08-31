@@ -18,5 +18,5 @@ module.exports = function(options) {
     _.set(settings, 'backlog', options.backlog || settings.backlog);
     _.set(settings, 'multihost.routes', options.routes || settings.multihost.routes);
 
-    require('./app/main');
+    return require('./app/main')();
 };
