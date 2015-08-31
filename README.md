@@ -37,8 +37,9 @@ $ gulp
 
 Now you can run `node app/main.js` to launch your web app, or use webappengine to load [app.js](https://github.com/cheton/generator-webappengine/blob/master/generators/app/templates/app/app.js). For example:
 ```js
-var webappengine = require('webappengine');
 var path = require('path');
+var webappengine = require('webappengine');
+
 webappengine({
     port: 80,
     routes: [
@@ -56,8 +57,8 @@ webappengine({
 
 ### API usage
 ```js
-var webappengine = require('webappengine');
 var path = require('path');
+var webappengine = require('webappengine');
 var options = {
     port: 80, // [optional] The listen port (default: 8000)
     //host: '', // [optional] The listen address or hostname (default: 0.0.0.0)
@@ -72,7 +73,10 @@ var options = {
     ]
 };
 
-webappengine(options);
+webappengine(options)
+    .on('ready', function(server) {
+        var io = require('socket.io')(server); // using socket.io
+    });
 ```
 
 ### Command line usage
