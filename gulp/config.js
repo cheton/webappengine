@@ -82,6 +82,10 @@ module.exports = {
                 bundleDependencies['vendor']
             ),
             transform: {
+                'babelify': {
+                    // https://github.com/babel/babelify#enable-experimental-transforms
+                    stage: 0 // Enable an entire TC39 category of experimental ES7 features
+                },
                 'browserify-css': {
                     'autoInject': true,
                     'autoInjectOptions': {
