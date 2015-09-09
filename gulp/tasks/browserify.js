@@ -11,79 +11,107 @@ var gulpif = require('gulp-if');
 var rename = require('gulp-rename');
 var exorcist = require('exorcist');
 var watchify = require('watchify');
+var livereload = require('gulp-livereload');
 
-module.exports = function(options) {
-    gulp.task('browserify', ['browserify:vendor-bundler', 'browserify:app-bundler']);
+var createVendorBundle = function(options) {
+    var browserifyConfig = _.get(options.config, 'browserify.vendor') || {};
+    var uglifyConfig = _.get(options.config, 'uglify') || {};
+    var bundleFile = 'vendor.js';
+    var bundleMapFile = path.join(browserifyConfig.dest, 'vendor.js.map');
+    var minifiedBundleFile = 'vendor.min.js';
 
-    gulp.task('browserify:vendor-bundler', function() {
-        var browserifyConfig = _.get(options.config, 'browserify.vendor') || {};
-        var uglifyConfig = _.get(options.config, 'uglify') || {};
-        var bundleFile = 'vendor.js';
-        var bundleMapFile = path.join(browserifyConfig.dest, 'vendor.js.map');
-        var minifiedBundleFile = 'vendor.min.js';
+    // Create a separate vendor bundler that will only run when starting gulp
+    var bundler = browserify(browserifyConfig.options);
+    _.each(browserifyConfig.require, function(lib) {
+        bundler.require(lib);
+    });
 
-        // Create a separate vendor bundler that will only run when starting gulp
-        var bundler = browserify(browserifyConfig.options);
-        _.each(browserifyConfig.require, function(lib) {
-            bundler.require(lib);
-        });
-
-        var start = new Date();
+    var rebundle = function() {
+        gutil.log('Rebundling "%s"...', gutil.colors.cyan(bundleFile));
         return bundler.bundle()
-            .on('error', options.errorHandler.error)
             .pipe(exorcist(bundleMapFile))
             .pipe(source(bundleFile))
             .pipe(gulpif(options.env !== 'development', streamify(uglify(uglifyConfig.options))))
             .pipe(gulp.dest(browserifyConfig.dest))
+            .pipe(gulpif(options.watch, livereload()))
             .pipe(notify(function() {
-                console.log('The ' + JSON.stringify(bundleFile) + ' bundle built in ' + (Date.now() - start) + 'ms');
+                gutil.log('Finished "%s" bundle.', gutil.colors.cyan(bundleFile));
             }));
+    };
+
+    if (options.watch) { // Also see at gulp/tasks/watch.js
+        bundler = watchify(bundler);
+        bundler.on('time', function(time) {
+            gutil.log('Browserify "%s" in %s.', gutil.colors.cyan(bundleFile), gutil.colors.magenta(time + ' ms'));
+        });
+        bundler.on('update', rebundle);
+        bundler.on('log', gutil.log);
+        bundler.on('error', options.errorHandler.warning);
+    } else {
+        bundler.on('error', options.errorHandler.error);
+    }
+
+    // Trigger initial bundling
+    return rebundle();
+};
+
+var createAppBundle = function(options) {
+    var browserifyConfig = _.get(options.config, 'browserify.app') || {};
+    var uglifyConfig = _.get(options.config, 'uglify') || {};
+    var browserifyTransform = browserifyConfig.transform;
+    var bundleFile = 'app.js';
+    var bundleMapFile = path.join(browserifyConfig.dest, 'app.js.map');
+    var minifiedBundleFile = 'app.min.js';
+
+    // Create the application bundler
+    var bundler = browserify(browserifyConfig.options);
+    bundler.add(browserifyConfig.src);
+    bundler.transform('babelify', browserifyTransform['babelify']);
+    bundler.transform('reactify'); // Use reactify to transform JSX content
+    bundler.transform('browserify-css', browserifyTransform['browserify-css']);
+    bundler.transform('brfs');
+    bundler.transform('browserify-shim', browserifyTransform['browserify-shim']);
+    _.each(browserifyConfig.external, function(lib) {
+        bundler.external(lib);
     });
 
-    gulp.task('browserify:app-bundler', function() {
-        var browserifyConfig = _.get(options.config, 'browserify.app') || {};
-        var uglifyConfig = _.get(options.config, 'uglify') || {};
-        var browserifyTransform = browserifyConfig.transform;
-        var bundleFile = 'app.js';
-        var bundleMapFile = path.join(browserifyConfig.dest, 'app.js.map');
-        var minifiedBundleFile = 'app.min.js';
+    var rebundle = function() {
+        gutil.log('Rebundling "%s"...', gutil.colors.cyan(bundleFile));
+        return bundler.bundle()
+            .pipe(exorcist(bundleMapFile))
+            .pipe(source(bundleFile))
+            .pipe(gulpif(options.env !== 'development', streamify(uglify(uglifyConfig.options))))
+            .pipe(gulp.dest(browserifyConfig.dest))
+            .pipe(gulpif(options.watch, livereload()))
+            .pipe(notify(function() {
+                gutil.log('Finished "%s" bundle.', gutil.colors.cyan(bundleFile));
+            }));
+    };
 
-        // Create the application bundler
-        var bundler = browserify(browserifyConfig.options);
-        bundler.add(browserifyConfig.src);
-        bundler.transform('babelify', browserifyTransform['babelify']);
-        bundler.transform('reactify'); // Use reactify to transform JSX content
-        bundler.transform('browserify-css', browserifyTransform['browserify-css']);
-        bundler.transform('brfs');
-        bundler.transform('browserify-shim', browserifyTransform['browserify-shim']);
-        _.each(browserifyConfig.external, function(lib) {
-            bundler.external(lib);
+    if (options.watch) { // Also see at gulp/tasks/watch.js
+        bundler = watchify(bundler);
+        bundler.on('time', function(time) {
+            gutil.log('Browserify "%s" in %s.', gutil.colors.cyan(bundleFile), gutil.colors.magenta(time + ' ms'));
         });
+        bundler.on('update', rebundle);
+        bundler.on('log', gutil.log);
+        bundler.on('error', options.errorHandler.warning);
+    } else {
+        bundler.on('error', options.errorHandler.error);
+    }
 
-        // The actual bundling process
-        var rebundle = function() {
-            var start = Date.now();
-            bundler.bundle()
-                .on('error', options.errorHandler.error)
-                .pipe(exorcist(bundleMapFile))
-                .pipe(source(bundleFile))
-                .pipe(gulpif(options.env !== 'development', streamify(uglify(uglifyConfig.options))))
-                .pipe(gulp.dest(browserifyConfig.dest))
-                .pipe(notify(function() {
-                    console.log('The ' + JSON.stringify(bundleFile) + ' bundle built in ' + (Date.now() - start) + 'ms');
-                }));
-        };
+    // Trigger initial bundling
+    return rebundle();
+};
 
-        // Add watchify
-        if (options.watch) { // Also see at gulp/tasks/watch.js
-            bundler = watchify(bundler);
-            bundler.on('update', rebundle);
-            bundler.on('log', gutil.log);
-        }
-
-        // Trigger the initial bundling
-        rebundle();
-
-        return bundler;
+module.exports = function(options) {
+    gulp.task('browserify-watch', function() {
+        options = _.extend(options, { watch: true });
+        createVendorBundle(options);
+        createAppBundle(options);
+    });
+    gulp.task('browserify', function() {
+        createVendorBundle(options);
+        createAppBundle(options);
     });
 };
