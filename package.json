@@ -44,6 +44,7 @@
     "datauri": "0.5.x",
     "errorhandler": "1.0.x",
     "express": "4.13.x",
+    "gulp-livereload": "^3.8.0",
     "hogan.js": "2.0.x",
     "http-proxy": "1.11.x",
     "i18next": "1.10.x",
