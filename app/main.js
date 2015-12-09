@@ -1,6 +1,3 @@
-// Change the current working directory to ensure that files are relative to the current directory.
-process.chdir(__dirname);
-
 // Module dependencies
 var cluster = require('cluster');
 require('colors');
@@ -43,12 +40,10 @@ var createMaster = function(cluster) {
 var createServer = function() {
     var app = require('./app')();
     var server = require('http').createServer(app);
-    var io = require('./socket.io')(server);
 
     server.setMaxListeners(0); // Set to zero for unlimited
-    io.setMaxListeners(0); // Set to zero for unlimited
 
-    server.listen(settings.port, function() {
+    server.listen(settings.port, settings.host, settings.backlog, function() {
         // Lower the process privileges by setting the UID and GUID after the process has mound to the port.
         if (settings.uid) {
             process.setuid(settings.uid);
@@ -60,42 +55,50 @@ var createServer = function() {
         console.log('Server is listening on %s:%d', address.address, address.port);
     });
 
-    io.sockets.on('connection', function(socket) {
-        socket.on('message', function(msg) {
-            console.log('Received a message: %s', msg);
-            socket.emit('message', { 'status': 'ok' });
-        });
-        socket.on('disconnect', function() {
-            console.log('Disconnected');
-        });
-    });
+    return server;
 };
 
-if (settings.cluster.enable) {
-    if (cluster.isMaster) { // True if the process is a master. 
-        createMaster(cluster);
+module.exports = function() {
+    var server;
 
-        // Event: message
-        Object.keys(cluster.workers).forEach(function(id) {
-            cluster.workers[id].on('message', function(msg) {
-                if (msg.cmd === 'bonjour') {
-                    console.log('Received a bonjour command from worker #%d(pid=%d)', this.id, this.process.pid);
-                    this.send({reply: 'ok'});
-                }
+    if (settings.cluster.enable) {
+        if (cluster.isMaster) { // True if the process is a master. 
+            createMaster(cluster);
+
+            // Event: message
+            Object.keys(cluster.workers).forEach(function(id) {
+                cluster.workers[id].on('message', function(msg) {
+                    if (msg.cmd === 'bonjour') {
+                        console.log('Received a bonjour command from worker #%d(pid=%d)', this.id, this.process.pid);
+                        this.send({reply: 'ok'});
+                    }
+                });
             });
-        });
 
-    } else if (cluster.isWorker) { // True if the process is not a master (it is the negation of cluster.isMaster).
-        createServer();
+        } else if (cluster.isWorker) { // True if the process is not a master (it is the negation of cluster.isMaster).
+            server = createServer();
 
-        // Event: message
-        process.send({cmd: 'bonjour'});
-        process.on('message', function(msg) {
-            console.log('Received a bonjour reply from master: %s', JSON.stringify(msg));
-        });
+            // Event: message
+            process.send({cmd: 'bonjour'});
+            process.on('message', function(msg) {
+                console.log('Received a bonjour reply from master: %s', JSON.stringify(msg));
+            });
+        }
+    } else {
+        // Debugging Clustered Apps with Node-Inspector
+        // http://strongloop.com/strongblog/whats-new-nodejs-v0-12-debugging-clusters/
+        server = createServer();
     }
-} else {
-    // Debugging Clustered Apps with Node-Inspector
-    // http://strongloop.com/strongblog/whats-new-nodejs-v0-12-debugging-clusters/
-    createServer();
-}
+
+    var Wrapper = function(server) {
+        this.server = server;
+    };
+    Wrapper.prototype.on = function(evt, callback) {
+        if (evt === 'ready') {
+            callback(this.server);
+        }
+        return this;
+    };
+
+    return new Wrapper(server);
+};

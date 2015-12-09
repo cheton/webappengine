@@ -21,12 +21,11 @@ fs.readdirSync(__dirname + '/lib/middleware').forEach(function(filename) {
     middleware[name] = require('./lib/middleware/' + name);
 });
 
-module.exports = function(options) {
-    options = options || {};
-
+module.exports = function() {
     // Main app
     var app = express();
     var errorhandler = require('errorhandler');
+    var serveStatic = require('serve-static');
 
     // Setup logger (winston)
     logger.init(settings.winston);
@@ -73,26 +72,39 @@ module.exports = function(options) {
 
     (function(app) {
         _.each(settings.multihost.routes, function(options) {
-            // Modules are cached after the first time they are loaded.
-            // The cached module must be invalidated to ensure data-independences in a multi-host environment.
-            var server_path = options.server;
-            if (require.cache[server_path]) {
-                delete require.cache[server_path];
-            }
-
-            if ( ! fs.existsSync(path.resolve(server_path) + '.js')) {
-                log.error('The multi-host server does not exist: %j', options);
+            if (options.type === 'static') {
+                // Serve static assets
+                app.use(options.route, serveStatic(path.resolve(options.directory)));
+                log.info('Served a static directory:', JSON.stringify(options, null, 4));
                 return;
             }
 
-            var server = require(server_path);
-            app.use(middleware.multihost({
-                hosts: options.hosts,
-                route: options.route,
-                server: server({ route: options.route })
-            }));
+            try {
+                // Modules are cached after the first time they are loaded.
+                // The cached module must be invalidated to ensure data-independences in a multi-host environment.
+                var server_path = path.resolve(options.server);
+                if (require.cache[server_path]) {
+                    delete require.cache[server_path];
+                }
 
-            log.info('Attached a multi-host server: %j', options);
+                var server = require(server_path);
+
+                app.use(middleware.multihost({
+                    hosts: options.hosts,
+                    route: options.route,
+                    server: server({
+                        route: options.route
+                    })
+                }));
+            }
+            catch (e) {
+                log.error(e);
+                log.error('The multi-host server does not exist:', JSON.stringify(options, null, 4));
+                return;
+            }
+
+
+            log.info('Attached a multi-host server:', JSON.stringify(options, null, 4));
         });
     }(app));
 

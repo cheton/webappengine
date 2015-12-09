@@ -1,0 +1,12 @@
+[
+    {
+        "type": "server",
+        "route": "/simple",
+        "server": "/path/to/your/project/examples/simple/app"
+    },
+    {
+        "type": "static",
+        "route": "/",
+        "directory": "/path/to/your/project/examples/static"
+    }
+]

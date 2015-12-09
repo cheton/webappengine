@@ -14,10 +14,7 @@ var pkg = require('../package.json');
 
 var bundleDependencies = {
     'vendor': [
-        //'handlebars',
-        //'i18next',
         'lodash',
-        'react',
         'rx'
     ]
 };
@@ -82,6 +79,9 @@ module.exports = {
                 bundleDependencies['vendor']
             ),
             transform: {
+                'babelify': {
+                    presets: ['es2015', 'stage-0', 'react']
+                },
                 'browserify-css': {
                     'autoInject': true,
                     'autoInjectOptions': {
