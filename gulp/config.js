@@ -14,10 +14,7 @@ var pkg = require('../package.json');
 
 var bundleDependencies = {
     'vendor': [
-        //'handlebars',
-        //'i18next',
         'lodash',
-        'react',
         'rx'
     ]
 };
@@ -83,9 +80,7 @@ module.exports = {
             ),
             transform: {
                 'babelify': {
-                    // https://github.com/babel/babelify#enable-experimental-transforms
-                    // You can enable an entire TC39 category of experimental ES7 features via the stage configuration option.
-                    stage: 0
+                    presets: ['es2015', 'stage-0', 'react']
                 },
                 'browserify-css': {
                     'autoInject': true,
