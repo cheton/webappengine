@@ -5,14 +5,8 @@
   "homepage": "https://github.com/cheton/webappengine",
   "author": "Cheton Wu <cheton@gmail.com>",
   "license": "MIT",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/cheton/webappengine/blob/master/LICENSE"
-    }
-  ],
   "engines": {
-    "node": "0.10.x"
+    "node": ">=0.10.x"
   },
   "keywords": [
     "webappengine"
@@ -22,9 +16,8 @@
   },
   "main": "./index.js",
   "scripts": {
-    "test": "npm run gulp",
-    "gulp": "gulp",
-    "tap-test": "tap test/*.js"
+    "test": "gulp && node_modules/.bin/tap --coverage test/*.js",
+    "coveralls": "node_modules/.bin/tap --coverage --coverage-report=text-lcov test/*.js | node_modules/.bin/coveralls"
   },
   "dependencies": {
     "body-parser": "1.13.x",
@@ -93,7 +86,7 @@
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.3",
     "gulp-wrap": "0.11.x",
-    "i18next-scanner": "^0.5.1",
+    "i18next-scanner": "^0.5.6",
     "main-bower-files": "2.6.x",
     "merge-stream": "^0.1.7",
     "nib": "^1.1.0",
