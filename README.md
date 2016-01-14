@@ -46,8 +46,9 @@ webappengine({
         {
             type: 'server',
             route: '/',
-            // An absolute path is recommended to use
-            server: path.resolve(__dirname, 'app/app')
+            server: function(options) {
+                var route = options.route;
+            }
         }
     ]
 });
@@ -67,7 +68,6 @@ var options = {
         {
             type: 'static', // [static|server]
             route: '/',
-            //server: path.resolve(__dirname, 'app/app'), // for the server type
             directory: path.resolve(__dirname, 'web') // for the static type
         }
     ]
