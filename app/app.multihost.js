@@ -80,14 +80,28 @@ module.exports = function() {
             }
 
             try {
-                // Modules are cached after the first time they are loaded.
-                // The cached module must be invalidated to ensure data-independences in a multi-host environment.
-                var server_path = path.resolve(options.server);
-                if (require.cache[server_path]) {
-                    delete require.cache[server_path];
+                var server = options.server;
+
+                if (typeof server === 'string') {
+                    // Modules are cached after the first time they are loaded.
+                    // The cached module must be invalidated to ensure data-independences in a multi-host environment.
+                    var server_path = path.resolve(options.server);
+                    if (require.cache[server_path]) {
+                        delete require.cache[server_path];
+                    }
+
+                    server = require(server_path);
+
+                    // Ready for ES6
+                    if (typeof server === 'object') {
+                        server = server.default;
+                    }
                 }
 
-                var server = require(server_path);
+                if (typeof server !== 'function') {
+                    log.error('The multi-host server does not exist:', JSON.stringify(options, null, 4));
+                    return;
+                }
 
                 app.use(middleware.multihost({
                     hosts: options.hosts,
@@ -98,11 +112,10 @@ module.exports = function() {
                 }));
             }
             catch (e) {
-                log.error(e);
+                console.log(e.stack);
                 log.error('The multi-host server does not exist:', JSON.stringify(options, null, 4));
                 return;
             }
-
 
             log.info('Attached a multi-host server:', JSON.stringify(options, null, 4));
         });
