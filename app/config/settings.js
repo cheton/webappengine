@@ -175,7 +175,7 @@ var settings = { // Default settings
         // If set to unspecific i18next will always load the unspecific resource file (eg. en instead of en-US).
         load: 'current', // all, current, unspecific
 
-        debug: true,
+        debug: false,
 
         resGetPath: path.resolve(__dirname, '..', 'i18n', '${lng}', '${ns}.json'),
 
