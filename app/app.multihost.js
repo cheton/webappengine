@@ -64,7 +64,7 @@ module.exports = function() {
         app.set('view engine', settings.view.defaultExtension); // The default engine extension to use when omitted
         app.set('views', path.join(__dirname, 'views')); // The view directory path
 
-        log.info('app.settings: %j', app.settings);
+        log.debug('app.settings: %j', app.settings);
     }(app));
 
     // Multi-host
@@ -75,7 +75,7 @@ module.exports = function() {
             if (options.type === 'static') {
                 // Serve static assets
                 app.use(options.route, serveStatic(path.resolve(options.directory)));
-                log.info('Served a static directory:', JSON.stringify(options, null, 4));
+                log.debug('Served a static directory:', JSON.stringify(options, null, 4));
                 return;
             }
 
@@ -117,7 +117,7 @@ module.exports = function() {
                 return;
             }
 
-            log.info('Attached a multi-host server:', JSON.stringify(options, null, 4));
+            log.debug('Attached a multi-host server:', JSON.stringify(options, null, 4));
         });
     }(app));
 
