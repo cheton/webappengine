@@ -78,7 +78,7 @@ module.exports = function() {
         app.set('view engine', settings.view.defaultExtension); // The default engine extension to use when omitted
         app.set('views', path.join(__dirname, 'views')); // The view directory path
 
-        log.info('app.settings: %j', app.settings);
+        log.debug('app.settings: %j', app.settings);
     }(app));
 
     // Removes the 'X-Powered-By' header in earlier versions of Express
@@ -115,7 +115,7 @@ module.exports = function() {
     app.use(compress(settings.middleware['compression']));
 
     _.each(settings.assets, function(asset, name) {
-        log.info('assets: name=%s, asset=%s', name, JSON.stringify(asset));
+        log.debug('assets: name=%s, asset=%s', name, JSON.stringify(asset));
 
         if ( ! asset.path) {
             log.error('asset path is not defined');
@@ -124,7 +124,7 @@ module.exports = function() {
 
         _.each(asset.routes, function(asset_route) {
             var route = urljoin(settings.route || '/', asset_route || '');
-            log.info('> route=%s', name, route);
+            log.debug('> route=%s', name, route);
             app.use(route, serveStatic(asset.path, {
                 maxAge: asset.maxAge
             }));
