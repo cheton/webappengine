@@ -94,24 +94,6 @@ module.exports = function() {
 };
 
 module.exports.init = function(settings) {
-    _.each([ // return the directory name 
-        path.dirname(settings.transports.File.filename),
-        path.dirname(settings.exceptionHandlers.File.filename)
-    ], function(logDir) {
-        if ( ! fs.existsSync(logDir)) {
-            // Create the directory if it does not exist
-            fs.mkdirSync(logDir);
-        }
-    });
-
-    if (cluster.isMaster) {
-        settings.transports.File.filename = util.format(settings.transports.File.filename, '');
-        settings.exceptionHandlers.File.filename = util.format(settings.exceptionHandlers.File.filename, '');
-    } else if (cluster.isWorker) {
-        settings.transports.File.filename = util.format(settings.transports.File.filename, ':' + cluster.worker.id);
-        settings.exceptionHandlers.File.filename = util.format(settings.exceptionHandlers.File.filename, ':' + cluster.worker.id);
-    }
-
     logger = new (winston.Logger)(defaultSettings);
 
     if ( ! settings.transports) {
@@ -120,16 +102,6 @@ module.exports.init = function(settings) {
 
     if (settings.transports.Console) {
         logger.add(winston.transports.Console, settings.transports.Console);
-    }
-
-    if (settings.transports.File) {
-        logger.add(winston.transports.File, settings.transports.File);
-    }
-
-    if (settings.exceptionHandlers && settings.exceptionHandlers.File) {
-        logger.handleExceptions(
-            new winston.transports.File(settings.exceptionHandlers.File)
-        );
     }
 
     logger.settings = settings;
