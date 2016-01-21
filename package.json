@@ -20,6 +20,7 @@
   },
   "main": "./index.js",
   "scripts": {
+    "prepublish": "npm run build && npm test",
     "build": "gulp",
     "test": "./babel-tap --coverage test/*.js",
     "coveralls": "./babel-tap --coverage --coverage-report=text-lcov test/*.js | node_modules/.bin/coveralls"
