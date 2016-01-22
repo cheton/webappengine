@@ -231,6 +231,6 @@ zh-tw  | 中文 (繁體)
 
 ## License
 
-Copyright (c) 2015 Cheton Wu
+Copyright (c) 2015-2016 Cheton Wu
 
 Licensed under the [MIT License](LICENSE).
