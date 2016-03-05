@@ -47,7 +47,15 @@ webappengine({
             type: 'server',
             route: '/',
             server: function(options) {
-                var route = options.route;
+                options = options || {};
+
+                var app = express();
+                var serveStatic = require('serve-static');
+                var assetPath = path.resolve(__dirname, 'web');
+                
+                app.use(options.route, serveStatic(assetPath));
+
+                return app;
             }
         }
     ]
@@ -231,6 +239,6 @@ zh-tw  | 中文 (繁體)
 
 ## License
 
-Copyright (c) 2015 Cheton Wu
+Copyright (c) 2015-2016 Cheton Wu
 
 Licensed under the [MIT License](LICENSE).
