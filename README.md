@@ -47,7 +47,15 @@ webappengine({
             type: 'server',
             route: '/',
             server: function(options) {
-                var route = options.route;
+                options = options || {};
+
+                var app = express();
+                var serveStatic = require('serve-static');
+                var assetPath = path.resolve(__dirname, 'web');
+                
+                app.use(options.route, serveStatic(assetPath));
+
+                return app;
             }
         }
     ]
