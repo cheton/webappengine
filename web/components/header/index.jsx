@@ -18,7 +18,6 @@ export class Header extends React.Component {
                     </div>
                     <div className="navbar-collapse collapse" id="navbar-collapse">
                         <ul className="nav navbar-nav">
-                            <li><Link to="dashboard">{i18n._('Dashboard')}</Link></li>
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button">{i18n._('Settings')} <span className="caret"></span></a>
                                 <ul className="dropdown-menu" role="menu">
