@@ -64,7 +64,7 @@ module.exports.err = {
         }));
 
         app.use(err_server({
-            view: 'common/500.jade'
+            view: 'common/500.hogan'
         }));
 
         this.app = app;

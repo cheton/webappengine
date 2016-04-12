@@ -155,7 +155,7 @@ module.exports = function() {
         error: 'Not found'
     }));
     app.use(middleware.err_server({
-        view: path.join('common', '500.jade'),
+        view: path.join('common', '500.hogan'),
         error: 'Internal server error'
     }));
 

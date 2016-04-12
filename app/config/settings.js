@@ -83,10 +83,6 @@ var settings = { // Default settings
             { // Hogan template with .hogan extension
                 extension: 'hogan',
                 template: 'hogan'
-            },
-            { // Jade template with .jade extension
-                extension: 'jade',
-                template: 'jade'
             }
         ]
     },

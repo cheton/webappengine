@@ -1,6 +1,6 @@
 {
   "name": "webappengine",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "A web application platform that can host multiple web apps running with Node.js.",
   "homepage": "https://github.com/cheton/webappengine",
   "author": "Cheton Wu <cheton@gmail.com>",
@@ -43,7 +43,6 @@
     "hogan.js": "2.0.x",
     "http-proxy": "1.11.x",
     "i18next": "1.10.x",
-    "jade": "0.35.x",
     "lodash": "3.10.x",
     "method-override": "1.0.x",
     "morgan": "1.0.x",
