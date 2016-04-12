@@ -4,7 +4,6 @@ import Router from 'react-router';
 import { Route, DefaultRoute, Link, RouteHandler } from 'react-router';
 import { Header } from './components/header';
 import { Home } from './components/home';
-import { Dashboard } from './components/dashboard';
 
 export class App extends React.Component {
     render() {
@@ -25,7 +24,6 @@ export function run() {
     var routes = (
         <Route name="app" path="/" handler={App}>
             <DefaultRoute handler={Home}/>
-            <Route name="dashboard" handler={Dashboard}/>
         </Route>
     );
     Router.run(routes, function(Handler) {
