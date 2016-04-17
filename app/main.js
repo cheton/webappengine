@@ -1,6 +1,5 @@
 // Module dependencies
 var cluster = require('cluster');
-require('colors');
 require('string-format');
 
 var settings = require('./config/settings'); // the configuration settings have been initialized
@@ -21,7 +20,7 @@ var createMaster = function(cluster) {
 
     // Event: listening
     cluster.on('listening', function(worker, address) {
-        console.log('The worker #%d(pid=%d) is listening on ' + '%s:%d'.bold.red, worker.id, worker.process.pid, address.address, address.port);
+        console.log('The worker #%d(pid=%d) is listening on %s:%d', worker.id, worker.process.pid, address.address, address.port);
     });
 
     // Event: disconnect
