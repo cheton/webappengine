@@ -1,8 +1,9 @@
 // Module dependencies
+var events = require('events');
 var cluster = require('cluster');
-require('colors');
 require('string-format');
 
+var eventEmitter = new events.EventEmitter();
 var settings = require('./config/settings'); // the configuration settings have been initialized
 
 var createMaster = function(cluster) {
@@ -21,7 +22,7 @@ var createMaster = function(cluster) {
 
     // Event: listening
     cluster.on('listening', function(worker, address) {
-        console.log('The worker #%d(pid=%d) is listening on ' + '%s:%d'.bold.red, worker.id, worker.process.pid, address.address, address.port);
+        console.log('The worker #%d(pid=%d) is listening on %s:%d', worker.id, worker.process.pid, address.address, address.port);
     });
 
     // Event: disconnect
@@ -53,6 +54,8 @@ var createServer = function() {
         }
         var address = server.address();
         console.log('Server is listening on %s:%d', address.address, address.port);
+
+        eventEmitter.emit('ready', server);
     });
 
     return server;
@@ -90,15 +93,5 @@ module.exports = function() {
         server = createServer();
     }
 
-    var Wrapper = function(server) {
-        this.server = server;
-    };
-    Wrapper.prototype.on = function(evt, callback) {
-        if (evt === 'ready') {
-            callback(this.server);
-        }
-        return this;
-    };
-
-    return new Wrapper(server);
+    return eventEmitter;
 };
