@@ -83,6 +83,9 @@ var options = {
 
 webappengine(options)
     .on('ready', function(server) {
+        var address = server.address();
+        console.log('Server is listening on %s:%d', address.address, address.port);
+
         var io = require('socket.io')(server); // using socket.io
     });
 ```
