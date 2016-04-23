@@ -52,8 +52,6 @@ var createServer = function() {
         if (settings.gid) {
             process.setgid(settings.gid);
         }
-        var address = server.address();
-        console.log('Server is listening on %s:%d', address.address, address.port);
 
         eventEmitter.emit('ready', server);
     });
