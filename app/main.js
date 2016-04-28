@@ -1,7 +1,6 @@
 // Module dependencies
 var events = require('events');
 var cluster = require('cluster');
-require('string-format');
 
 var eventEmitter = new events.EventEmitter();
 var settings = require('./config/settings'); // the configuration settings have been initialized
