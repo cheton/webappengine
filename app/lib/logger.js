@@ -5,10 +5,6 @@ var _ = require('lodash'),
     fs = require('fs'),
     path = require('path');
 
-// String utils
-require('colors');
-require('string-format');
-
 // Default settings
 var defaultSettings = {
     levels: {
