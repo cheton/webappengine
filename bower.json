@@ -1,6 +1,6 @@
 {
   "name": "webappengine",
-  "version": "0.8.2",
+  "version": "0.8.4",
   "description": "A web application platform that can host multiple web apps running with Node.js.",
   "ignore": [],
   "dependencies": {
