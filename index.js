@@ -13,10 +13,18 @@ module.exports = function(options) {
     options = options || {};
 
     // Overrides defaults
-    _.set(settings, 'port', options.port || settings.port);
-    _.set(settings, 'host', options.host || settings.host);
-    _.set(settings, 'backlog', options.backlog || settings.backlog);
-    _.set(settings, 'multihost.routes', options.routes || settings.multihost.routes);
+    if (_.isNumber(options.port)) {
+        _.set(settings, 'port', options.port);
+    }
+    if (_.isString(options.host)) {
+        _.set(settings, 'host', options.host);
+    }
+    if (_.isNumber(options.backlog)) {
+        _.set(settings, 'backlog', options.backlog);
+    }
+    if (_.isArray(options.routes)) {
+        _.set(settings, 'multihost.routes', options.routes);
+    }
 
     return require('./app/main')();
 };
