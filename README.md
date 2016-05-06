@@ -120,9 +120,10 @@ $ webappengine -h
     -h, --help               output usage information
     -V, --version            output the version number
     -p, --port               set listen port (default: 8000)
-    -l, --host               set listen address or hostname (default: 0.0.0.0)
+    -H, --host <host>        set listen address or hostname (default: 0.0.0.0)
     -b, --backlog            set listen backlog (default: 511)
     -c, --config <filename>  set multihost configuration file
+    -v, --verbose            increase the verbosity level
 ```
 
 ## Getting Started
