@@ -46,7 +46,10 @@ const main = (options = {}, callback) => {
         routes: routes,
         verbosity: program.verbose,
         ...options // Override command-line options if specified
-    }, callback);
+    })
+    .on('ready', (server) => {
+        callback(server);
+    });
 };
 
 export default main;

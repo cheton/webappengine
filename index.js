@@ -8,6 +8,6 @@
  * @param {number} [options.verbose] The verbosity level (default: 0)
  */
 module.exports = (options) => {
-    const createServer = require('./dist/app').default;
-    createServer(options);
+    const createServer = require('./dist/app').createServer;
+    return createServer(options);
 };
