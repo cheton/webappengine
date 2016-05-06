@@ -1,113 +1,120 @@
-var _ = require('lodash');
-var fs = require('fs');
-var path = require('path');
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var i18next = require('i18next-scanner');
-var hash = require('sha1');
-var table = require('text-table');
+import _ from 'lodash';
+import fs from 'fs';
+import gulp from 'gulp';
+import gutil from 'gulp-util';
+import i18nextScanner from 'i18next-scanner';
+import hash from 'sha1';
+import table from 'text-table';
 
-var customTransform = function _transform(file, enc, done) {
-    var parser = this.parser;
-    var extname = path.extname(file.path);
-    var content = fs.readFileSync(file.path, enc);
-    var parseResults = [
+const appConfig = {
+    src: [
+        'src/app/**/*.html',
+        'src/app/**/*.hbs',
+        'src/app/**/*.js',
+        'src/app/**/*.jsx',
+        // Use ! to filter out files or directories
+        '!src/app/i18n/**',
+        '!**/node_modules/**'
+    ],
+    dest: './',
+    options: {
+        debug: false,
+        sort: true,
+        lngs: ['en'],
+        defaultValue: '__L10N__', // to indicate that a default value has not been defined for the key
+        ns: [
+            'config',
+            'resource' // default
+        ],
+        defaultNs: 'resource',
+        resource: {
+            loadPath: 'src/app/i18n/{{lng}}/{{ns}}.json',
+            savePath: 'src/app/i18n/{{lng}}/{{ns}}.json', // or 'src/app/i18n/${lng}/${ns}.saveAll.json'
+            jsonIndent: 4
+        },
+        nsSeparator: ':', // namespace separator
+        keySeparator: '.', // key separator
+        pluralSeparator: '_', // plural separator
+        contextSeparator: '_', // context separator
+        interpolation: {
+            prefix: '{{',
+            suffix: '}}'
+        }
+    }
+};
+
+const webConfig = {
+    src: [
+        'src/web/**/*.html',
+        'src/web/**/*.hbs',
+        'src/web/**/*.js',
+        'src/web/**/*.jsx',
+        // Use ! to filter out files or directories
+        '!src/web/{vendor,i18n}/**',
+        '!test/**',
+        '!**/node_modules/**'
+    ],
+    dest: './',
+    options: {
+        debug: false,
+        sort: true,
+        lngs: ['en'],
+        defaultValue: '__L10N__', // to indicate that a default value has not been defined for the key
+        ns: [
+            'locale', // language & timezone,
+            'resource' // default
+        ],
+        defaultNs: 'resource',
+        resource: {
+            loadPath: 'src/web/i18n/{{lng}}/{{ns}}.json',
+            savePath: 'src/web/i18n/{{lng}}/{{ns}}.json', // or 'src/web/i18n/${lng}/${ns}.saveAll.json'
+            jsonIndent: 4
+        },
+        nsSeparator: ':', // namespace separator
+        keySeparator: '.', // key separator
+        interpolation: {
+            prefix: '{{',
+            suffix: '}}'
+        }
+    }
+};
+
+function customTransform(file, enc, done) {
+    const parser = this.parser;
+    const content = fs.readFileSync(file.path, enc);
+    let tableData = [
         ['Key', 'Value']
     ];
 
-    gutil.log('parsing ' + JSON.stringify(file.relative) + ':');
-
-    // Using i18next-text
-    (function() {
-        var results = content.match(/i18n\._\(("[^"]*"|'[^']*')\s*[\,\)]/igm) || '';
-        _.each(results, function(result) {
-            var key, value;
-            var r = result.match(/i18n\._\(("[^"]*"|'[^']*')/);
-
-            if (r) {
-                value = _.trim(r[1], '\'"');
-
-                // Replace double backslash with single backslash
-                value = value.replace(/\\\\/g, '\\');
-                value = value.replace(/\\\'/, '\'');
-
-                key = hash(value); // returns a hash value as its default key
-
-                parser.parse(key, value);
-                parseResults.push([key, value]);
-            }
+    { // Using i18next-text
+        parser.parseFuncFromString(content, { list: ['i18n._'] }, (key, options) => {
+            const defaultValue = key;
+            key = hash(defaultValue);
+            options.defaultValue = defaultValue;
+            parser.set(key, options);
+            tableData.push([key, defaultValue]);
         });
-    }());
+    }
 
-    // i18n function helper
-    (function() {
-        var results = content.match(/{{i18n\s+("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')?([^}]*)}}/gm) || [];
-        _.each(results, function(result) {
-            var key, value;
-            var r = result.match(/{{i18n\s+("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')?([^}]*)}}/m) || [];
-
-            if ( ! _.isUndefined(r[1])) {
-                value = _.trim(r[1], '\'"');
-
-                // Replace double backslash with single backslash
-                value = value.replace(/\\\\/g, '\\');
-                value = value.replace(/\\\'/, '\'');
-            }
-
-            var params = parser.parseHashArguments(r[2]);
-            if (_.has(params, 'defaultKey')) {
-                key = params['defaultKey'];
-            }
-
-            if (_.isUndefined(key) && _.isUndefined(value)) {
-                return;
-            }
-
-            if (_.isUndefined(key)) {
-                key = hash(value); // returns a hash value as its default key
-            }
-
-            parser.parse(key, value);
-            parseResults.push([key, value]);
-        });
-    }());
-
-    // i18n block helper
-    (function() {
-        var results = content.match(/{{#i18n\s*([^}]*)}}((?:(?!{{\/i18n}})(?:.|\n))*){{\/i18n}}/gm) || [];
-        _.each(results, function(result) {
-            var key, value;
-            var r = result.match(/{{#i18n\s*([^}]*)}}((?:(?!{{\/i18n}})(?:.|\n))*){{\/i18n}}/m) || [];
-
-            if ( ! _.isUndefined(r[2])) {
-                value = _.trim(r[2], '\'"');
-            }
-
-            if (_.isUndefined(value)) {
-                return;
-            }
-
-            key = hash(value); // returns a hash value as its default key
-
-            parser.parse(key, value);
-            parseResults.push([key, value]);
-        });
-    }());
-
-    if (_.size(parseResults) > 1) {
-        gutil.log('result of ' + JSON.stringify(file.relative) + ':\n' + table(parseResults, {'hsep': ' | '}));
+    if (_.size(tableData) > 1) {
+        const text = table(tableData, { 'hsep': ' | ' });
+        gutil.log('i18next-scanner:', file.relative + '\n' + text);
+    } else {
+        gutil.log('i18next-scanner:', file.relative);
     }
 
     done();
-};
+}
 
-module.exports = function(options) {
-    gulp.task('i18next', function() {
-        var i18nextConfig = options.config.i18next;
-
-        return gulp.src(i18nextConfig.src)
-            .pipe(i18next(i18nextConfig.options, customTransform))
-            .pipe(gulp.dest(i18nextConfig.dest));
+export default (options) => {
+    gulp.task('i18next:app', () => {
+        return gulp.src(appConfig.src)
+            .pipe(i18nextScanner(appConfig.options, customTransform))
+            .pipe(gulp.dest(appConfig.dest));
+    });
+    gulp.task('i18next:web', () => {
+        return gulp.src(webConfig.src)
+            .pipe(i18nextScanner(webConfig.options, customTransform))
+            .pipe(gulp.dest(webConfig.dest));
     });
 };
-

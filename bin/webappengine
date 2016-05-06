@@ -1,44 +1,8 @@
 #!/usr/bin/env node
 
-process.env.NODE_ENV = 'production';
+var main = require('../dist/main').default;
 
-var _ = require('lodash');
-var path = require('path');
-var program = require('commander');
-var pkg = require('../package.json');
-require('colors');
-
-program
-    .version(pkg.version)
-    .usage('[options]')
-    .option('-p, --port <port>', 'set listen port (default: 8000)')
-    .option('-H, --host <host>', 'set listen address or hostname (default: 0.0.0.0)')
-    .option('-b, --backlog <backlog>', 'set listen backlog (default: 511)')
-    .option('-c, --config <filename>', 'set multihost configuration file')
-    .option('-d, --debug', 'run in debug mode')
-    .parse(process.argv);
-
-if (program.debug) {
-    process.env.NODE_ENV = 'development';
-}
-
-var settings = require('../app/config/settings');
-
-// Overrides defaults
-_.set(settings, 'port', program.port || settings.port);
-_.set(settings, 'host', program.host || settings.host);
-_.set(settings, 'backlog', program.backlog || settings.backlog);
-
-// Set multihost configuration settings
-if (program.config) {
-    var routes = require(path.resolve(program.config));
-    if ( ! _.isArray(routes)) {
-        console.log('Check your multihost configuration file to ensure it contain valid routes.'.bold.red);
-        console.log(routes);
-        process.exit(1);
-    } else {
-        _.set(settings, 'multihost.routes', routes || settings.multihost.routes);
-    }
-}
-
-require('../app/main')();
+main(function(server) {
+    const address = server.address();
+    console.log('Started the server at http://%s:%d/.', address.address, address.port);
+});
