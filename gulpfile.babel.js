@@ -34,7 +34,6 @@ gulp.task('development', (callback) => {
     runSequence(
         'clean',
         ['app:build-dev', 'web:build-dev'],
-        ['app:i18n', 'web:i18n'],
         ['app:dist', 'web:dist'],
         callback
     );
@@ -46,7 +45,6 @@ gulp.task('production', (callback) => {
     runSequence(
         'clean',
         ['app:build-prod', 'web:build-prod'],
-        ['app:i18n', 'web:i18n'],
         ['app:dist', 'web:dist'],
         callback
     );

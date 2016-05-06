@@ -3,6 +3,7 @@
 // Defaults to 'production'
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
+import _ from 'lodash';
 import path from 'path';
 import program from 'commander';
 import pkg from '../package.json';

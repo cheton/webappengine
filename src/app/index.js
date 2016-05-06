@@ -4,7 +4,6 @@ import settings from './config/settings';
 import serverMain from './server';
 
 const createServer = ({ port, host, backlog, routes = [], verbosity = 0 }, callback) => {
-
     { // Override default settings
         if (port !== undefined) {
             _.set(settings, 'port', port);
@@ -31,7 +30,7 @@ const createServer = ({ port, host, backlog, routes = [], verbosity = 0 }, callb
     }
 
     serverMain().on('ready', (server) => {
-        callback(server)
+        callback(server);
     });
 };
 

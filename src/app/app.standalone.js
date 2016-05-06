@@ -63,11 +63,7 @@ const renderPage = (req, res, next) => {
             'version': version,
             'lang': lng,
             'title': t('title'),
-            'dir': t('config:dir'),
-            'loading': t('loading'),
-            partials: {
-                loading: 'loading' // views/loading.hbs
-            }
+            'dir': t('config:dir')
         });
 
         return;

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import engines from 'consolidate';
@@ -89,7 +87,7 @@ const appMain = () => {
                 })
             }));
         } catch (e) {
-            console.log(e.stack);
+            console.error(e.stack);
             log.error('The multi-host server does not exist:', JSON.stringify(options, null, 4));
             return;
         }

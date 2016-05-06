@@ -1,9 +1,6 @@
-import fs from 'fs';
-import path from 'path';
 import gulp from 'gulp';
 import babel from 'gulp-babel';
 import gutil from 'gulp-util';
-import webpack from 'webpack';
 
 export default (options) => {
     gulp.task('app:build-dev', (callback) => {

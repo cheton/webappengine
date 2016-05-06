@@ -1,19 +1,18 @@
-import _ from 'lodash';
 import cluster from 'cluster';
 import util from 'util';
 import winston from 'winston';
 import settings from '../config/settings';
 
 const meta = () => {
-    let _meta = {};
+    let meta = {};
     if (cluster.isMaster) {
-        _meta.id = 0;
-        _meta.pid = process.pid;
+        meta.id = 0;
+        meta.pid = process.pid;
     } else if (cluster.isWorker) {
-        _meta.id = cluster.worker.id;
-        _meta.pid = cluster.worker.process.pid;
+        meta.id = cluster.worker.id;
+        meta.pid = cluster.worker.process.pid;
     }
-    return { meta: _meta };
+    return { meta: meta };
 };
 
 // https://code.google.com/p/v8/wiki/JavaScriptStackTraceApi
@@ -25,17 +24,12 @@ const getStackTrace = () => {
 
 const prefix = [];
 const logger = new winston.Logger({
-    colors: {
-        debug: 'magenta',
-        verbose: 'blue',
-        info: 'green',
-        warn: 'yellow',
-        error: 'red'
-    },
     exitOnError: false,
     level: settings.winston.level,
     transports: [
         new winston.transports.Console({
+            colorize: true,
+            timestamp: true,
             handleExceptions: true,
             json: false
         })

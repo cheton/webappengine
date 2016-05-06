@@ -8,35 +8,9 @@ module.exports = {
     target: 'web',
     entry: {
         app: [
-            path.resolve(__dirname, 'src/web/index.jsx')
+            path.resolve(__dirname, 'src/web/index.js')
         ],
         vendor: [
-            'async',
-            'classnames',
-            'colornames',
-            'i18next',
-            'jsuri',
-            'lodash',
-            'moment',
-            'pubsub-js',
-            'rc-slider',
-            'rc-switch',
-            'react',
-            'react-dom',
-            'react-addons-shallow-compare',
-            'react-addons-update',
-            'react-bootstrap',
-            'react-dom',
-            'react-dropzone',
-            'react-infinite',
-            'react-router',
-            'react-select',
-            'react-sortablejs',
-            'react-virtualized',
-            'sha1',
-            'sortablejs',
-            'stacktrace-js',
-            'superagent'
         ]
     },
     output: {
@@ -48,7 +22,6 @@ module.exports = {
     ],
     module: {
         preLoaders: [
-            // http://survivejs.com/webpack_react/linting_in_webpack/
             {
                 test: /\.jsx?$/,
                 loaders: ['eslint'],
@@ -69,15 +42,7 @@ module.exports = {
                 loader: 'babel',
                 exclude: /(node_modules|bower_components)/,
                 query: {
-                    env: {
-                        development: {
-                            presets: ['react-hmre']
-                        }
-                    },
-                    presets: ['es2015', 'stage-0', 'react'],
-                    plugins: [
-                        'transform-decorators-legacy'
-                    ]
+                    presets: ['es2015', 'stage-0']
                 }
             },
             {

@@ -14,9 +14,19 @@
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="{{webroot}}favicon.ico">
 </head>
 <body class="{{dir}}">
-<div id="loading">{{> loading}}</div>
-<div id="container"></div>
-<script data-version="{{version}}" data-webroot="{{webroot}}" data-cdn="{{webroot}}" src="{{webroot}}plugins.js"></script>
+<div class="container-fluid" id="container" style="display: none">
+    <div class="row">
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Welcome to WebAppEngine!</h1>
+                <p>If you see this page, the WebAppEngine server is successfully installed and working. Further configuration is required.</p>
+                <p>For online documentation please refer to <a href="http://cheton.github.io/webappengine/">http://cheton.github.io/webappengine/</a>.</p>
+                <p><a class="btn btn-primary btn-lg" href="https://github.com/cheton/webappengine" role="button">Learn more »</a></p>
+                <p><i>Thank you for using WebAppEngine.</i></p>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="{{webroot}}vendor.js"></script>
 <script src="{{webroot}}app.js"></script>
 </body>

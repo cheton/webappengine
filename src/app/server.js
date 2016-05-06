@@ -1,3 +1,4 @@
+/* eslint no-console: 0 */
 // Module dependencies
 import cluster from 'cluster';
 import events from 'events';
@@ -16,22 +17,22 @@ const createMaster = (cluster) => {
     }
 
     // Event: online
-    cluster.on('online', function(worker) {
+    cluster.on('online', (worker) => {
         console.log('The worker #%d(pid=%d) is online', worker.id, worker.process.pid);
     });
 
     // Event: listening
-    cluster.on('listening', function(worker, address) {
+    cluster.on('listening', (worker, address) => {
         console.log('The worker #%d(pid=%d) is listening on %s:%d', worker.id, worker.process.pid, address.address, address.port);
     });
 
     // Event: disconnect
-    cluster.on('disconnect', function(worker) {
+    cluster.on('disconnect', (worker) => {
         console.log('The worker #%d(pid=%d) has disconnected', worker.id, worker.process.pid);
     });
 
     // Event: exit
-    cluster.on('exit', function(worker, code, signal) {
+    cluster.on('exit', (worker, code, signal) => {
         const exitCode = worker.process.exitCode;
         console.log('The worker #%d(pid=%d) died (%d). restarting...', worker.id, worker.process.pid, exitCode);
         cluster.fork();
@@ -44,7 +45,7 @@ const createServer = () => {
 
     server.setMaxListeners(0); // Set to zero for unlimited
 
-    server.listen(settings.port, settings.host, settings.backlog, function() {
+    server.listen(settings.port, settings.host, settings.backlog, () => {
         // Lower the process privileges by setting the UID and GUID after the process has mound to the port.
         if (settings.uid) {
             process.setuid(settings.uid);
@@ -60,35 +61,33 @@ const createServer = () => {
 };
 
 const serverMain = () => {
-    let server;
-
     if (settings.cluster.enable) {
-        if (cluster.isMaster) { // True if the process is a master. 
+        if (cluster.isMaster) { // True if the process is a master.
             createMaster(cluster);
 
             // Event: message
-            Object.keys(cluster.workers).forEach(function(id) {
-                cluster.workers[id].on('message', function(msg) {
+            Object.keys(cluster.workers).forEach((id) => {
+                cluster.workers[id].on('message', (msg) => {
                     if (msg.cmd === 'bonjour') {
                         console.log('Received a bonjour command from worker #%d(pid=%d)', this.id, this.process.pid);
-                        this.send({reply: 'ok'});
+                        this.send({ reply: 'ok' });
                     }
                 });
             });
-
-        } else if (cluster.isWorker) { // True if the process is not a master (it is the negation of cluster.isMaster).
-            server = createServer();
+        } else if (cluster.isWorker) {
+            // True if the process is not a master (it is the negation of cluster.isMaster).
+            createServer();
 
             // Event: message
             process.send({ cmd: 'bonjour' });
-            process.on('message', function(msg) {
+            process.on('message', (msg) => {
                 console.log('Received a bonjour reply from master: %s', JSON.stringify(msg));
             });
         }
     } else {
         // Debugging Clustered Apps with Node-Inspector
         // http://strongloop.com/strongblog/whats-new-nodejs-v0-12-debugging-clusters/
-        server = createServer();
+        createServer();
     }
 
     return eventEmitter;

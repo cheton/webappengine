@@ -1,3 +1,4 @@
+/* eslint import/no-unresolved: 0 */
 /**
  * @param {object} [options] The options object
  * @param {number} [options.port] The listen port (default: 8000)
@@ -7,6 +8,6 @@
  * @param {number} [options.verbose] The verbosity level (default: 0)
  */
 module.exports = (options) => {
-    var createServer = require('./dist/app').default;
+    const createServer = require('./dist/app').default;
     createServer(options);
 };
