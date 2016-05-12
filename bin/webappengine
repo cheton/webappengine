@@ -2,7 +2,12 @@
 
 var main = require('../dist/main').default;
 
-main(function(server) {
+main(function(err, server) {
+    if (err) {
+        console.error('Error:', err);
+        return;
+    }
+
     const address = server.address();
     console.log('Started the server at http://%s:%d/.', address.address, address.port);
 });

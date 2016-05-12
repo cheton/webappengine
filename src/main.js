@@ -48,7 +48,10 @@ const main = (options = {}, callback) => {
         ...options // Override command-line options if specified
     })
     .on('ready', (server) => {
-        callback(server);
+        callback(null, server);
+    })
+    .on('error', (err) => {
+        callback(err);
     });
 };
 

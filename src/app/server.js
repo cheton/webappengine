@@ -43,6 +43,10 @@ const createServer = () => {
     const app = require('./app.multihost').default();
     const server = http.createServer(app);
 
+    server.on('error', (err) => {
+        eventEmitter.emit('error', err);
+    });
+
     server.setMaxListeners(0); // Set to zero for unlimited
 
     server.listen(settings.port, settings.host, settings.backlog, () => {
