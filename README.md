@@ -87,6 +87,9 @@ webappengine(options)
         console.log('Server is listening on %s:%d', address.address, address.port);
 
         var io = require('socket.io')(server); // using socket.io
+    })
+    .on('error', function(err) {
+        console.error('Error:', err);
     });
 ```
 
