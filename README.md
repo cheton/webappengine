@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/webappengine.png?downloads=true&stars=true)](https://nodei.co/npm/webappengine/)    
 
-A web application platform that can host multiple web apps running with Node.js.
+A web application server that can host multiple web apps running with Node.js.
 
 ![WebAppEngine](https://raw.githubusercontent.com/cheton/webappengine/master/media/screenshot.png)
 <i>Note. The administration UI is currently under construction.</i>
