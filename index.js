@@ -1,3 +1,4 @@
+/* eslint no-var: 0 */
 /* eslint import/no-unresolved: 0 */
 /**
  * @param {object} [options] The options object
@@ -7,7 +8,7 @@
  * @param {array} [options.routes] An array containing the route settings
  * @param {number} [options.verbose] The verbosity level (default: 0)
  */
-module.exports = (options) => {
-    const createServer = require('./dist/app').createServer;
+module.exports = function(options) {
+    var createServer = require('./dist/app').createServer;
     return createServer(options);
 };
