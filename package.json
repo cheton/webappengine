@@ -35,8 +35,8 @@
     "lint": "npm run eslint && npm run stylint",
     "eslint": "eslint *.js src bin gulp test",
     "stylint": "stylint src/web",
-    "test": "node babel-tap --coverage test/*.js",
-    "coveralls": "node babel-tap --coverage --coverage-report=text-lcov test/*.js | node_modules/.bin/coveralls"
+    "test": "tap test/*.js --node-arg=--require --node-arg=babel-register --node-arg=--require --node-arg=babel-polyfill",
+    "coveralls": "tap test/*.js --coverage --coverage-report=text-lcov --nyc-arg=--require --nyc-arg=babel-register --nyc-arg=--require --nyc-arg=babel-polyfill | coveralls"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
