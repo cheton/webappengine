@@ -1,4 +1,6 @@
 /* eslint max-len: 0 */
+/* eslint import/first: 0 */
+/* eslint import/no-dynamic-require: 0 */
 
 // Defaults to 'production'
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';

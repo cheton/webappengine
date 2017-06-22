@@ -1,3 +1,4 @@
+/* eslint import/no-dynamic-require: 0 */
 import path from 'path';
 import express from 'express';
 import engines from 'consolidate';
